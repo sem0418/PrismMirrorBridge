@@ -7,7 +7,7 @@ body:
   - type: input
     id: versions
     attributes:
-      label: 系统、Prism 和工具版本
+      label: Windows、Prism 和工具版本
     validations:
       required: true
   - type: textarea

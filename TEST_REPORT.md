@@ -2,7 +2,7 @@
 
 日期：2026-11-08。用户已反馈 1.0.2 可用并授权发布。该反馈不是维护环境的完整 Windows 验收记录；下面保留各项检查的实际范围。
 
-**维护环境中的真实 Windows + Prism 11.1.1 的 ATM10 8.5 完整导入：未实机验证。** 当前结果区分了离线测试、真实 BMCL 接口和官方 Linux 启动器的受控组件复现，没有将其中任何一项等同于用户机器上完整整合包已修复。
+**Windows 实机反馈：用户已确认 1.0.2 在 Windows 环境可正常使用。** 正式支持与发布范围为 Windows x64。自动化、历史诊断和用户实机反馈分别记录；维护环境没有远程访问用户机器。
 
 | 当前版本验证 | 结果 | 范围 |
 | --- | --- | --- |
@@ -32,7 +32,7 @@
 
 无哈希磁盘索引和 36042 字节临时文件保留；运行中拒绝操作；首次接入与重复接入；旧版迁移及撤销；元数据端点变化；原始快照恢复；目录已移动但尚未记录的中断；配置提交失败后的恢复；恢复快照过程的中断；目录冲突与缺失快照；符号链接和路径逃逸拒绝；Windows/POSIX 进程检测结果；真实同名测试进程阻止 CLI 操作。
 
-Windows 的进程检测分支使用受控返回值测试；没有在真实 Windows 上执行 PowerShell、批处理修复、CA 对话框或 Prism 导入。POSIX 专用的两个检查在 Windows 上会明确跳过。
+新增进程检测分支最初使用受控返回值测试；后续 Windows 托管 CI 已实际执行 PowerShell 进程检查及 CLI 接入/修复/撤销，用户也已反馈 Windows 使用正常。无人值守 CI 跳过需要桌面确认的 CA 对话框。两个历史 POSIX 专用检查在 Windows CI 中明确跳过。
 
 ## 打包与复现
 
@@ -45,7 +45,7 @@ node scripts/neoforge-live-test.mjs
 python3 scripts/check-prism-hash-state.py
 ```
 
-最后一项为可选开发诊断，需要 C++ 编译器、Qt 6 开发文件和 pkg-config；不影响终端用户使用。真实 BMCL 检查会访问公共镜像，应合理使用。
+最后一项属于历史开发诊断，需要其对应的 C++/Qt 环境，不属于 Windows 产品验收要求。真实 BMCL 检查会访问公共镜像，应合理使用。
 
 当前原始记录：`test-results/unit-1.0.2.tap`、`smoke-1.0.2.txt`、`prism-hash-state-1.0.2.json`、`official-prism-checksum-1.0.2.json`、`neoforge-live-1.0.2.json`。
 

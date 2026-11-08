@@ -1,14 +1,13 @@
 # 参与开发
 
-需要 Node.js 24.5+。运行时没有 npm 第三方依赖，不需要执行 `npm install`。
+正式支持和 CI 均面向 Windows x64。开发需要 Node.js 24.5+。运行时没有 npm 第三方依赖，不需要执行 `npm install`。
 
 ```sh
 npm test
 node scripts/smoke-test.mjs
-node scripts/certificate-check.mjs
 ```
 
-`smoke-test.mjs` 使用独立临时目录，检查初始化、配置恢复和服务启动。证书严格检查还需要 OpenSSL。
+`smoke-test.mjs` 使用独立临时目录，检查初始化、元数据修复、配置恢复和服务启动。历史 OpenSSL 证书诊断保留在 `scripts/certificate-check.mjs`，属于可选维护资料。
 
 Windows 根证书首次导入可能需要用户确认安全提示，托管 CI 不运行这一交互步骤。需要在自己的 Windows 桌面中额外验证时，运行 `node scripts/smoke-test.mjs --windows-trust`：它会临时信任测试 CA、执行接入/撤销脚本，并在结束时移除测试信任。普通 `npm test` 和默认 CI 不改变系统信任库。
 

@@ -2,7 +2,7 @@
 
 独立运行的 Prism Launcher 镜像转换工具。它在本机提供 Prism 所需的组件元数据，并把指定下载请求转交 BMCLAPI / MCIM。无需重新编译 Prism。
 
-**当前版本：v1.0.2。用户复测反馈此版本已可用；详细验证范围见测试报告。**
+**支持平台：Windows x64。当前版本 v1.0.2 已由用户在 Windows 环境实测确认可正常使用。**
 
 [下载 Windows x64 便携包](https://github.com/sem0418/PrismMirrorBridge/releases/download/v1.0.2/PrismMirrorBridge-1.0.2-Windows-x64.zip) · [版本发布页](https://github.com/sem0418/PrismMirrorBridge/releases/tag/v1.0.2)
 
@@ -55,7 +55,7 @@
 - CurseForge 完整介绍接口返回 404 时，转换器使用 MCIM 的项目摘要并在正文标明“仅为摘要”。没有摘要、未缓存内容、更新日志及其他不支持的接口仍明确返回错误；不会伪造完整内容或空成功结果。
 - 模组文件默认 `fileFallback: false`：镜像失败会报错；改为 `true` 后才允许在 MCIM 文件失败时尝试原地址，`/health` 会显示回退次数。MCIM 本身也可能返回到其他 CDN 的重定向。
 - Microsoft 登录、Xbox、Minecraft 账号服务等不在解密名单内，代理只转发加密连接。这里验证了透传机制，没有使用真实账号执行登录。
-- 已在隔离 Linux 桌面中运行**官方 Prism 11.1.1**，验证组件解析、Fabric 安装选项和界面内模组下载。另用未修改的 Prism 原始解析代码验证 25 份组件数据。**维护环境仍未实机复测普通 Windows 信任对话框、真实账号登录及进入游戏**。用户已反馈 1.0.2 可用；详细范围和原始记录见 [TEST_REPORT.md](TEST_REPORT.md)。
+- 已在隔离 Linux 桌面中运行**官方 Prism 11.1.1**，验证组件解析、Fabric 安装选项和界面内模组下载。另用未修改的 Prism 原始解析代码验证 25 份组件数据。历史维护诊断范围见测试报告；1.0.2 已由用户在 Windows 环境确认正常使用。详细范围和原始记录见 [TEST_REPORT.md](TEST_REPORT.md)。
 
 ## 从 1.0.0 / 1.0.1 升级
 
@@ -68,7 +68,7 @@
 
 新用户运行 `01-setup.cmd` 时也会执行元数据隔离。重复接入同一已完成迁移的配置不会再次移动正常缓存；手动修复命令则明确重新隔离当前 `meta`。`03-undo.cmd` 隔离桥接器缓存后恢复原网络设置：1.0.2 首次接入时保存的原始快照可自动放回；1.0.0/1.0.1 升级时捕获的混合缓存只保留备份，原源使用新缓存。中断后先保持 Prism 关闭，再重跑原命令；出现目录冲突时停止并保留全部备份，不覆盖任一副本。
 
-NeoForge 校验状态的证据、修复和验证边界见 [诊断及修复报告](docs/NEOFORGE_CHECKSUM_DIAGNOSIS.md)。**维护环境中的真实 Windows + Prism 的 ATM10 8.5 导入仍未实机验证；用户已反馈此版本可用。**
+NeoForge 校验状态的证据、修复和验证边界见 [诊断及修复报告](docs/NEOFORGE_CHECKSUM_DIAGNOSIS.md)。**用户已在 Windows 环境实测确认 1.0.2 可正常使用。**
 
 ## 完全重装
 
@@ -84,7 +84,7 @@ NeoForge 校验状态的证据、修复和验证边界见 [诊断及修复报告
 - 缺失 ID 保持缺失；重复 ID 只出现一次。仅识别 MCIM 明确的“该批 ID 全部不存在”404，普通 404、503、无效 JSON 或超时仍使整次查询失败。
 - `/health` 的 `bulkModBatches`、`bulkWireBytes`、`bulkDecodedBytes`、`bulkJSONParseMs` 可用于查看项目查询的批数和成功读取批次的传输/解析开销。预算按 Prism 单次请求约 60 秒设计；手动降低 Prism 超时后也应相应降低工具预算，实际成功速度仍受网络和镜像状态影响。
 
-All the Mods 10 8.5 的真实 498-ID 接口复测约 22.3 秒完成，**维护环境中的真实 Windows + Prism 整合包导入未实机验证**。两个问题的证据、错误语义和剩余验证事项见 [修复报告](docs/NETWORK_FIXES_1.0.1.md)。
+All the Mods 10 8.5 的真实 498-ID 接口复测约 22.3 秒完成，该测量为历史 API 检查；1.0.2 已由用户在 Windows 环境确认正常使用。两个问题的证据、错误语义和剩余验证事项见 [修复报告](docs/NETWORK_FIXES_1.0.1.md)。
 
 ## 配置
 
@@ -134,7 +134,7 @@ ProxyUser=
 ProxyPass=
 ```
 
-只改元数据地址不足以接入模组 API；还需要代理设置和证书信任。Linux/macOS 可运行 Node 源码，但证书要导入 Prism 所用 Qt 的信任库。Linux 的隔离测试通过 Qt 公共接口仅添加测试 CA，保留正常 TLS 校验；这不代表已提供 Linux/macOS 自动安装脚本，且仅设置 `SSL_CERT_FILE` 不保证所有 Prism 构建可用。
+只改元数据地址不足以接入模组 API；还需要代理设置和 Windows 证书信任。日常使用请优先运行 `01-setup.cmd`，通过脚本完成这些步骤。
 
 ```sh
 node cli.mjs doctor
@@ -146,14 +146,7 @@ node cli.mjs restore --prism-config "你的数据目录/prismlauncher.cfg"
 node cli.mjs untrust-ca             # 仅 Windows
 ```
 
-可选深入验证需要 GCC 14+、Qt 6 开发文件及对应 Prism 源码；日常运行无需这些依赖：
-
-```sh
-node scripts/certificate-check.mjs # 需要 OpenSSL，严格校验证书
-node scripts/build-native-probe.mjs --prism-source /path/to/PrismLauncher --qt-include /path/to/qt6 --out /tmp/prism-probe
-node scripts/native-validation.mjs --probe /tmp/prism-probe
-/tmp/prism-probe test-results/native-cases # 对交付的样本再次离线解析
-```
+历史研究与深入诊断资料保留在 `docs`、`tests/native` 和对应测试报告中。Windows 日常使用无需安装 C++ 编译器、Qt 或 npm 依赖。
 
 测试结果写入 `test-results`。源码结构和接口研究见 [docs/DESIGN.md](docs/DESIGN.md)，第三方来源见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 

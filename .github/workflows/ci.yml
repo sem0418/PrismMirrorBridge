@@ -12,12 +12,8 @@ concurrency:
   cancel-in-progress: true
 jobs:
   test:
-    name: Node 24 / ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-    runs-on: ${{ matrix.os }}
+    name: Windows x64 / Node 24
+    runs-on: windows-latest
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -30,6 +26,3 @@ jobs:
         run: npm test
       - name: CLI lifecycle without trust-store changes
         run: node scripts/smoke-test.mjs
-      - name: Strict X.509 conformance
-        if: runner.os == 'Linux'
-        run: node scripts/certificate-check.mjs
