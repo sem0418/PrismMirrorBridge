@@ -1,0 +1,1 @@
+{"formatVersion":1,"uid":"net.fabricmc.intermediary","name":"Intermediary Mappings","version":"1.20.1","releaseTime":"1970-01-01T00:00:00.000Z","type":"release","order":11,"requires":[{"uid":"net.minecraft","equals":"1.20.1"}],"volatile":true,"libraries":[{"name":"net.fabricmc:intermediary:1.20.1","url":"https://bmclapi2.bangbang93.com/maven/"}]}
