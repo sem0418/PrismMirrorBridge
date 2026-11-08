@@ -1,0 +1,14 @@
+{
+  "runId": 42470784807,
+  "headSHA": "2a9291482203f2eb0d5397fc26eea2fb82df6c48",
+  "url": "https://github.com/sem0418/PrismMirrorBridge/actions/runs/42470784807",
+  "jobId": 128700792363,
+  "name": "Windows x64 / Node 24",
+  "conclusion": "success",
+  "tests": 70,
+  "passed": 68,
+  "failed": 0,
+  "skipped": 2,
+  "CLILifecyclePassed": true,
+  "interactiveWindowsTrustSkipped": true
+}

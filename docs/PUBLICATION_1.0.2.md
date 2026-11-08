@@ -17,3 +17,11 @@
 ## 第三方服务
 
 仅发布本机工具和源码，不部署公共转发服务，不代用户向第三方发送登记评论。MCIM 的接入登记与本地转接方式仍需维护者按其规则确认；仓库公开不代表已获得镜像服务方认可或授权。
+
+## Windows CI
+
+[Windows x64 / Node 24 检查](https://github.com/sem0418/PrismMirrorBridge/actions/runs/42470784807)通过：70 项测试中 68 项通过、2 项历史 POSIX 专用检查跳过、0 失败；Windows PowerShell 进程检测和 CLI 接入/修复/撤销均已实际执行。交互式 CA 信任检查由无人值守 CI 明确跳过。
+
+该运行对应源码提交 `2a9291482203f2eb0d5397fc26eea2fb82df6c48`。此后的发布记录提交只更新文档和测试结果；发布前比较 CI、测试代码与生产程序的 Git blob，确认没有新的程序变化。
+
+原 `package-check-1.0.2.json` 记录用户确认的测试包；`package-check-release-1.0.2.json` 记录正式发布包。正式包还包含当前发布说明及匿名化记录。

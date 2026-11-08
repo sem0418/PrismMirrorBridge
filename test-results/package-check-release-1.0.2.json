@@ -1,0 +1,34 @@
+{
+  "version": "1.0.2",
+  "phase": "formal-release",
+  "checkedAt": "2026-11-08T10:24:45.906Z",
+  "supportedPlatform": "Windows x64",
+  "userWindowsConfirmed": true,
+  "archiveCRC": true,
+  "allFileSHA256": true,
+  "privateStateExcluded": true,
+  "officialWindowsRuntimeSHA256": true,
+  "extractedOfflineTests": {
+    "passed": 70,
+    "failed": 0,
+    "scope": "Packaging-host extraction check"
+  },
+  "extractedCLISmoke": true,
+  "validatedCodeSHA256": "44f9a9c01395758df9aa8ba1dd7d0dc2ceaf480eafb4eff1f785095ca76105ed",
+  "windowsCI": {
+    "runId": 42470784807,
+    "headSHA": "2a9291482203f2eb0d5397fc26eea2fb82df6c48",
+    "url": "https://github.com/sem0418/PrismMirrorBridge/actions/runs/42470784807",
+    "jobId": 128700792363,
+    "name": "Windows x64 / Node 24",
+    "conclusion": "success",
+    "tests": 70,
+    "passed": 68,
+    "failed": 0,
+    "skipped": 2,
+    "CLILifecyclePassed": true,
+    "interactiveWindowsTrustSkipped": true
+  },
+  "passed": true,
+  "verificationNote": "Report added after extracted tests; final rebuild retains the same validated code fingerprint and is checked against every manifest hash."
+}
