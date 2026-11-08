@@ -1,0 +1,69 @@
+{
+  "scope": "Official Prism 11.1.1 Linux executable, controlled recorded metadata responses; not a real ATM10 import",
+  "warm": {
+    "requests": [
+      {
+        "phase": "warm",
+        "path": "/meta/v1/index.json"
+      },
+      {
+        "phase": "warm",
+        "path": "/meta/v1/net.neoforged/21.1.265.json"
+      },
+      {
+        "phase": "warm",
+        "path": "/meta/v1/net.neoforged/21.1.265.json"
+      },
+      {
+        "phase": "warm",
+        "path": "/meta/v1/net.neoforged/21.1.265.json"
+      }
+    ],
+    "checksumFailures": 3,
+    "formalComponentExists": false,
+    "diskIndexHashless": true
+  },
+  "afterRepair": {
+    "requests": [
+      {
+        "phase": "cold-after-repair",
+        "path": "/meta/v1/index.json"
+      },
+      {
+        "phase": "cold-after-repair",
+        "path": "/meta/v1/net.neoforged/index.json"
+      },
+      {
+        "phase": "cold-after-repair",
+        "path": "/meta/v1/net.neoforged/21.1.265.json"
+      },
+      {
+        "phase": "cold-after-repair",
+        "path": "/meta/v1/net.minecraft/index.json"
+      }
+    ],
+    "checksumFailures": 0,
+    "formalComponentExists": true,
+    "sha256": "b7542fda4c29695219c27cac053947ea85a691044d0fb17690889540e7dd3ce1"
+  },
+  "windowsAndPrismRealMachine": "未实机验证",
+  "fullModpackImportTested": false,
+  "passed": true,
+  "prismVersion": "11.1.1",
+  "prismPlatform": "Linux x86_64",
+  "bridgeVersion": "1.0.2",
+  "unmodifiedOfficialExecutable": true,
+  "fixtureOrigin": "Recorded official index and exact converted component bytes; controlled reduced root index.",
+  "targetOnly": true,
+  "nonTargetResult": "The fixture server deliberately returns 404 for net.minecraft/index.json; complete profile resolution and gameplay were not tested.",
+  "userMachineAccessed": false,
+  "memoryInspectedOnUserMachine": false,
+  "userHistoricalIndexLoadSequenceKnown": false,
+  "checksumsDisabled": false,
+  "executableSHA256": "666415d1abbfb9a03665c62db9fe05de9a38444b67332df23a0bfe290a87c67a",
+  "checkedAt": "2026-11-08T09:27:34Z",
+  "ldPreloadWasSet": false,
+  "convertedMetadataIndexAdvertisesSHA256": false,
+  "newExpectationBehavior": "Existing Prism optional-hash behavior in a fresh process; JSON parsing still validated",
+  "fileHashValidatorsChanged": false
+}

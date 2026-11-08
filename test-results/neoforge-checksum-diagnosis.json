@@ -1,0 +1,185 @@
+{
+  "diagnosisVersion": 1,
+  "bridgeVersionTested": "1.0.1",
+  "prismSourceRef": "11.1.1",
+  "network": {
+    "checkedAt": "2026-11-08T08:49:26.019Z",
+    "expectedFromUser": "63d850bb1b842adbccb4753027587b5778215c0ed305bdaca080f52e8799021f",
+    "actualFromUser": "b7542fda4c29695219c27cac053947ea85a691044d0fb17690889540e7dd3ce1",
+    "results": [
+      {
+        "name": "official-neoforge-index",
+        "bytes": 831123,
+        "sha256": "a2af6368204c088439024817997ee1e556d0acd5fffe799faaecdb2b8991978c",
+        "ms": 4751,
+        "entry": {
+          "recommended": false,
+          "releaseTime": "2026-10-25T06:00:38.797285+00:00",
+          "requires": [
+            {
+              "equals": "1.21.1",
+              "uid": "net.minecraft"
+            }
+          ],
+          "sha256": "63d850bb1b842adbccb4753027587b5778215c0ed305bdaca080f52e8799021f",
+          "type": "release",
+          "version": "21.1.265"
+        }
+      },
+      {
+        "name": "official-neoforge-component",
+        "bytes": 56449,
+        "sha256": "63d850bb1b842adbccb4753027587b5778215c0ed305bdaca080f52e8799021f",
+        "ms": 184
+      },
+      {
+        "name": "bridge-neoforge-component",
+        "status": 200,
+        "bytes": 36042,
+        "sha256": "b7542fda4c29695219c27cac053947ea85a691044d0fb17690889540e7dd3ce1",
+        "ms": 22330
+      },
+      {
+        "name": "bridge-neoforge-index",
+        "status": 200,
+        "bytes": 302325,
+        "sha256": "00639d807a2090f450d90d03910bd4537ed7df9a438568729701af8c7ddb30b2",
+        "ms": 18,
+        "entry": {
+          "version": "21.1.265",
+          "releaseTime": "1970-01-01T00:00:00+00:00",
+          "type": "release",
+          "recommended": true,
+          "requires": [
+            {
+              "uid": "net.minecraft",
+              "equals": "1.21.1"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "nativeProbe": {
+    "passed": true,
+    "scope": "Linux C++ probe: exact extracted Prism 11.1.1 merge function bodies + unmodified ChecksumValidator header; minimal surrounding scaffolding; not a complete launcher run",
+    "tests": [
+      {
+        "name": "official bytes match exact user expected hash",
+        "passed": true
+      },
+      {
+        "name": "bridge bytes match exact user actual hash",
+        "passed": true
+      },
+      {
+        "name": "unmodified Prism validator rejects bridge bytes with official hash",
+        "passed": true
+      },
+      {
+        "name": "fresh version with hashless bridge row has no checksum expectation",
+        "passed": true
+      },
+      {
+        "name": "hashless bridge row preserves official hash in existing version",
+        "passed": true,
+        "retained": "63d850bb1b842adbccb4753027587b5778215c0ed305bdaca080f52e8799021f"
+      },
+      {
+        "name": "explicit empty string also does not clear old hash",
+        "passed": true
+      },
+      {
+        "name": "three validator resets still reject unchanged converted bytes",
+        "passed": true
+      },
+      {
+        "name": "nonempty converted hash replaces old hash and validates bytes",
+        "passed": true
+      },
+      {
+        "name": "corrected expectation still rejects modified bytes",
+        "passed": true
+      },
+      {
+        "name": "hashless root entry also preserves old package-index hash",
+        "passed": true
+      }
+    ],
+    "windowsAndPrismRealMachine": "未实机验证"
+  },
+  "semanticComparison": {
+    "parsedObjectsEqualBeforeNormalization": false,
+    "parsedObjectsEqualAfterURLAndTimeNormalization": true,
+    "officialLibraries": 45,
+    "bridgeLibraries": 45,
+    "officialMavenFiles": 68,
+    "bridgeMavenFiles": 68,
+    "installerSHA1Matches": true,
+    "installerSize": 6992412
+  },
+  "sourceProvenance": {
+    "repository": "PrismLauncher/PrismLauncher",
+    "ref": "11.1.1",
+    "files": [
+      {
+        "path": "launcher/meta/JsonFormat.cpp",
+        "ref": "11.1.1",
+        "gitBlobSHA": "db1947655ce5eddfde5340d975f9d48c3121ff99",
+        "url": "https://github.com/PrismLauncher/PrismLauncher/blob/11.1.1/launcher/meta/JsonFormat.cpp"
+      },
+      {
+        "path": "launcher/meta/Version.cpp",
+        "ref": "11.1.1",
+        "gitBlobSHA": "ce9a9cc8aaae3feab66c48fdf5b6338d0808c4ba",
+        "url": "https://github.com/PrismLauncher/PrismLauncher/blob/11.1.1/launcher/meta/Version.cpp"
+      },
+      {
+        "path": "launcher/meta/VersionList.cpp",
+        "ref": "11.1.1",
+        "gitBlobSHA": "fa3a271a61c1f6a521e6d5a11a74c94dd02a14f9",
+        "url": "https://github.com/PrismLauncher/PrismLauncher/blob/11.1.1/launcher/meta/VersionList.cpp"
+      },
+      {
+        "path": "launcher/meta/Index.cpp",
+        "ref": "11.1.1",
+        "gitBlobSHA": "d0c7075cd0b9b57ebb26c75d25b84334e475a35d",
+        "url": "https://github.com/PrismLauncher/PrismLauncher/blob/11.1.1/launcher/meta/Index.cpp"
+      },
+      {
+        "path": "launcher/meta/BaseEntity.cpp",
+        "ref": "11.1.1",
+        "gitBlobSHA": "f2f3e13fb53fa59ffdc4a9eb0fd884b5ae0ed6ed",
+        "url": "https://github.com/PrismLauncher/PrismLauncher/blob/11.1.1/launcher/meta/BaseEntity.cpp"
+      },
+      {
+        "path": "launcher/net/ChecksumValidator.h",
+        "ref": "11.1.1",
+        "gitBlobSHA": "c7906cc13c79dfbb15b754df75ad957267b91b4d",
+        "url": "https://github.com/PrismLauncher/PrismLauncher/blob/11.1.1/launcher/net/ChecksumValidator.h"
+      },
+      {
+        "path": "launcher/net/Sink.h",
+        "ref": "11.1.1",
+        "gitBlobSHA": "3f04cbd82c166794856a178ad488bb8e8d78e909",
+        "url": "https://github.com/PrismLauncher/PrismLauncher/blob/11.1.1/launcher/net/Sink.h"
+      },
+      {
+        "path": "launcher/net/FileSink.cpp",
+        "ref": "11.1.1",
+        "gitBlobSHA": "47838f62cbee0085ee576596f97ca0800b52a5f5",
+        "url": "https://github.com/PrismLauncher/PrismLauncher/blob/11.1.1/launcher/net/FileSink.cpp"
+      },
+      {
+        "path": "launcher/net/NetJob.cpp",
+        "ref": "11.1.1",
+        "gitBlobSHA": "3dd1c09cfcf363a7c7e0e4afb3b045651c7e1942",
+        "url": "https://github.com/PrismLauncher/PrismLauncher/blob/11.1.1/launcher/net/NetJob.cpp"
+      }
+    ]
+  },
+  "productionCodeChanged": false,
+  "deliveredArchiveChanged": false,
+  "userMachineAccessed": false,
+  "remainingUnknown": "Whether the official index was loaded from disk or earlier network activity on the user machine; that history is not observable here."
+}

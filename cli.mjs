@@ -5,8 +5,9 @@ import { existsSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { loadConfig } from './src/config.mjs';
 import { ensureCA } from './src/certificates.mjs';
-import { configurePrism, restorePrism } from './src/prism-config.mjs';
+import { configurePrism, restorePrism, repairPrismMetadata } from './src/prism-config.mjs';
 import { Bridge } from './src/server.mjs';
+import { VERSION } from './src/version.mjs';
 
 const args = process.argv.slice(2), command = args.shift() || 'serve';
 const option = name => { const i = args.indexOf(name); return i < 0 ? undefined : args[i + 1]; };
@@ -17,18 +18,22 @@ async function main() {
   const config = loadConfig(resolve(option('--config') || join(root, 'config.json')));
   if (command === 'serve') {
     const bridge = await new Bridge(config).start();
-    console.log(`Prism Mirror Bridge 1.0.0\n状态页：http://127.0.0.1:${bridge.port}/\n元数据：http://127.0.0.1:${bridge.port}/meta/v1/\nHTTP 代理：127.0.0.1:${bridge.port}\n按 Ctrl+C 停止服务。`);
+    console.log(`Prism Mirror Bridge ${VERSION}\n状态页：http://127.0.0.1:${bridge.port}/\n元数据：http://127.0.0.1:${bridge.port}/meta/v1/\nHTTP 代理：127.0.0.1:${bridge.port}\n按 Ctrl+C 停止服务。`);
     let stopping = false;
     const stop = async () => { if (stopping) return; stopping = true; await bridge.close(); process.exit(0); };
     process.on('SIGINT', stop); process.on('SIGTERM', stop);
     return;
   }
-  if (command === 'configure' || command === 'restore') {
+  if (['configure', 'restore', 'repair-metadata'].includes(command)) {
     const path = option('--prism-config') || option('--prism-dir');
     if (!path) throw new Error('Pass --prism-config <prismlauncher.cfg> or --prism-dir <Prism data directory>. Close Prism first.');
-    const result = command === 'configure' ? configurePrism(path, config) : restorePrism(path);
-    console.log(command === 'configure' ? 'Prism 接入完成。启动服务后再打开 Prism。' : 'Prism 的原有网络设置已恢复。');
+    const result = command === 'restore' ? restorePrism(path)
+      : command === 'repair-metadata' ? repairPrismMetadata(path, config) : configurePrism(path, config);
+    console.log(command === 'configure' ? 'Prism 接入完成。启动服务后重新打开 Prism。'
+      : command === 'repair-metadata' ? 'Prism 元数据修复步骤已完成。请重新打开 Prism 后重试导入。'
+        : 'Prism 的原有网络设置已恢复，桥接器元数据已隔离。');
     console.log(result.file);
+    if (result.metadata?.migrated && result.metadata.archives?.some(path => existsSync(path))) console.log('旧 meta 目录以 meta.prism-bridge-* 名称保留在 Prism 根目录中；实例、账号与模组文件未改动。');
     if (command === 'configure' && !['None', 'Default'].includes(result.previousProxy)) console.log('原 Prism 使用了自定义代理；如仍需要它，请在 config.json 的 upstreamProxy 中配置该代理。');
     return;
   }
@@ -50,6 +55,6 @@ async function main() {
     } catch { console.log('服务未运行。先运行“02-start.cmd”，再检查状态。'); process.exitCode = 1; }
     return;
   }
-  throw new Error('Commands: serve, init, configure, restore, trust-ca, untrust-ca, doctor.');
+  throw new Error('Commands: serve, init, configure, repair-metadata, restore, trust-ca, untrust-ca, doctor.');
 }
 main().catch(error => { console.error('错误：' + error.message); process.exitCode = 1; });

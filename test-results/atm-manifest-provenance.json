@@ -1,0 +1,41 @@
+{
+  "name": "All the Mods 10",
+  "version": "8.5",
+  "fileEntries": 498,
+  "projectIds": 498,
+  "archiveBytes": 205881742,
+  "rangeRequests": [
+    {
+      "offset": 205881720,
+      "bytes": 22,
+      "seconds": 8.304
+    },
+    {
+      "offset": 205881700,
+      "bytes": 20,
+      "seconds": 9.338
+    },
+    {
+      "offset": 205126890,
+      "bytes": 754830,
+      "seconds": 8.337
+    },
+    {
+      "offset": 0,
+      "bytes": 30,
+      "seconds": 9.394
+    },
+    {
+      "offset": 30,
+      "bytes": 13,
+      "seconds": 7.58
+    },
+    {
+      "offset": 43,
+      "bytes": 5592,
+      "seconds": 9.507
+    }
+  ],
+  "fullArchiveSHA1Verified": false,
+  "manifestCRCVerified": true
+}

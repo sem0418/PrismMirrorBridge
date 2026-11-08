@@ -5,9 +5,11 @@ export function loadConfig(file) {
   const config = { listen: '127.0.0.1', port: 17643, bmcl: 'https://bmclapi2.bangbang93.com', mcim: 'https://mod.mcimirror.top',
     prismRecipes: 'https://meta.prismlauncher.org/v1/', compatibilityRecipes: false, fileFallback: false,
     upstreamProxy: 'environment', timeoutMs: 30000, retries: 2, concurrency: 4, cacheSeconds: 300, dataDir: '.bridge',
+    bulkBatchSize: 50, bulkConcurrency: 3, bulkTimeoutMs: 45000,
     ...JSON.parse(readFileSync(file, 'utf8')) };
   if (config.listen !== '127.0.0.1') throw new Error('This tool only binds to 127.0.0.1.');
-  for (const [key, min, max] of [['port', 1, 65535], ['concurrency', 1, 8], ['retries', 0, 3], ['timeoutMs', 1000, 120000], ['cacheSeconds', 1, 86400]])
+  for (const [key, min, max] of [['port', 1, 65535], ['concurrency', 1, 8], ['retries', 0, 3], ['timeoutMs', 1000, 120000], ['cacheSeconds', 1, 86400],
+    ['bulkBatchSize', 10, 100], ['bulkConcurrency', 1, 3], ['bulkTimeoutMs', 1000, 50000]])
     if (!Number.isInteger(config[key]) || config[key] < min || config[key] > max) throw new Error('Invalid configuration: ' + key);
   for (const key of ['bmcl', 'mcim', 'prismRecipes']) {
     const u = new URL(config[key]);

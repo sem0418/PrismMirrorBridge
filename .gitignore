@@ -5,6 +5,7 @@ node_modules/
 *.log
 *.bridge-backup.json
 *.bridge-backup.json.restored-*
+meta.prism-bridge-*/
 *.pem
 *.key
 *.p12

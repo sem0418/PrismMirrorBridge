@@ -1,0 +1,30 @@
+{
+  "repository": "PrismLauncher/PrismLauncher",
+  "ref": "11.1.1",
+  "files": [
+    {
+      "path": "launcher/meta/Version.cpp",
+      "ref": "11.1.1",
+      "gitBlobSHA": "ce9a9cc8aaae3feab66c48fdf5b6338d0808c4ba",
+      "url": "https://github.com/PrismLauncher/PrismLauncher/blob/11.1.1/launcher/meta/Version.cpp"
+    },
+    {
+      "path": "launcher/meta/VersionList.cpp",
+      "ref": "11.1.1",
+      "gitBlobSHA": "fa3a271a61c1f6a521e6d5a11a74c94dd02a14f9",
+      "url": "https://github.com/PrismLauncher/PrismLauncher/blob/11.1.1/launcher/meta/VersionList.cpp"
+    },
+    {
+      "path": "launcher/net/ChecksumValidator.h",
+      "ref": "11.1.1",
+      "gitBlobSHA": "c7906cc13c79dfbb15b754df75ad957267b91b4d",
+      "url": "https://github.com/PrismLauncher/PrismLauncher/blob/11.1.1/launcher/net/ChecksumValidator.h"
+    },
+    {
+      "path": "launcher/net/Validator.h",
+      "ref": "11.1.1",
+      "gitBlobSHA": "6d1945ee62acea9cbf7dacbd061e827ec83fce59",
+      "url": "https://github.com/PrismLauncher/PrismLauncher/blob/11.1.1/launcher/net/Validator.h"
+    }
+  ]
+}

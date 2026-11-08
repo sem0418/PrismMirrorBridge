@@ -1,0 +1,62 @@
+{
+  "startedAt": "2026-11-08T07:54:16.608Z",
+  "version": "1.0.1",
+  "source": {
+    "projectId": 925200,
+    "fileId": 9431424,
+    "version": "8.5",
+    "manifestCRCVerified": true,
+    "fullArchiveSHA1Verified": false
+  },
+  "environment": "linux/x64",
+  "node": "24.22.1",
+  "windowsAndPrismRealMachine": "未实机验证",
+  "fullModpackImportTested": false,
+  "checks": [
+    {
+      "endpoint": "POST /v1/mods/files",
+      "status": 200,
+      "inputIds": 498,
+      "returnedRecords": 498,
+      "responseBytes": 969431,
+      "elapsedMs": 10743,
+      "passed": true
+    },
+    {
+      "endpoint": "POST /v1/mods",
+      "status": 200,
+      "inputIds": 498,
+      "returnedRecords": 498,
+      "responseBytes": 8187151,
+      "elapsedMs": 22321,
+      "missingIds": [],
+      "passed": true
+    },
+    {
+      "endpoint": "POST /v1/mods (10-ID semantic comparison)",
+      "status": 200,
+      "inputIds": 10,
+      "returnedRecords": 10,
+      "responseBytes": 178582,
+      "elapsedMs": 1656,
+      "fieldsMatchBatchedResult": true,
+      "passed": true
+    }
+  ],
+  "bulkCounts": {
+    "requests": 2,
+    "errors": 0,
+    "bmcl": 0,
+    "mcim": 2,
+    "compatibilityRecipes": 0,
+    "fileFallback": 0,
+    "tunnels": 0,
+    "bulkModRequests": 1,
+    "bulkModBatches": 10,
+    "bulkWireBytes": 1548099,
+    "bulkDecodedBytes": 8205667,
+    "bulkJSONParseMs": 61.81999999999999
+  },
+  "passed": true,
+  "finishedAt": "2026-11-08T07:54:51.698Z"
+}

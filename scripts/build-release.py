@@ -21,7 +21,7 @@ NODE_ZIP_SHA256 = 'ca1bff5d8ead13c9f2ea404a176db46bd430704d5b5113734049fa365e779
 NODE_EXE_SHA256 = '1c331340fa6cac5e4294725959070a143fa0507195a78ad77eed7943f719aac9'
 DIRECTORIES = {'src', 'data', 'docs', 'scripts', 'tests', 'test-results', 'LICENSES', 'runtime', '.github'}
 ROOT_FILES = {'README.md', 'TEST_REPORT.md', 'CHANGELOG.md', 'CONTRIBUTING.md', 'SECURITY.md', 'THIRD_PARTY_NOTICES.md',
-              'LICENSE', 'package.json', 'config.json', 'cli.mjs', 'run.cmd', '01-setup.cmd', '02-start.cmd', '03-undo.cmd', '04-test.cmd', '.gitignore', '.gitattributes'}
+              'LICENSE', 'package.json', 'config.json', 'cli.mjs', 'run.cmd', '01-setup.cmd', '02-start.cmd', '03-undo.cmd', '04-test.cmd', '05-repair-metadata.cmd', '.gitignore', '.gitattributes'}
 
 def digest(value): return hashlib.sha256(value).hexdigest()
 
@@ -35,7 +35,8 @@ def main():
     config = json.loads((ROOT / 'config.json').read_text())
     if config != {'listen': '127.0.0.1', 'port': 17643, 'bmcl': 'https://bmclapi2.bangbang93.com', 'mcim': 'https://mod.mcimirror.top',
                   'prismRecipes': 'https://meta.prismlauncher.org/v1/', 'compatibilityRecipes': False, 'fileFallback': False,
-                  'upstreamProxy': 'environment', 'timeoutMs': 30000, 'retries': 2, 'concurrency': 4, 'cacheSeconds': 300, 'dataDir': '.bridge'}:
+                  'upstreamProxy': 'environment', 'timeoutMs': 30000, 'retries': 2, 'concurrency': 4, 'cacheSeconds': 300, 'dataDir': '.bridge',
+                  'bulkBatchSize': 50, 'bulkConcurrency': 3, 'bulkTimeoutMs': 45000}:
         raise ValueError('Release config must contain the documented defaults, without local settings')
     content = {}
     for path in sorted(ROOT.rglob('*')):

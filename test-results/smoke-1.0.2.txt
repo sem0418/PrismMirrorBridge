@@ -1,0 +1,2 @@
+PASS CLI configure/repair/restore isolates metadata, restores its original snapshot, and preserves later settings and paths with spaces
+PASS CLI init/serve/doctor and component root index

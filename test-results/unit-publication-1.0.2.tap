@@ -1,0 +1,430 @@
+TAP version 13
+# Subtest: INI patching preserves unrelated content, sections, BOM and Windows newlines
+ok 1 - INI patching preserves unrelated content, sections, BOM and Windows newlines
+  ---
+  duration_ms: 2.484784
+  type: 'test'
+  ...
+# Subtest: configure is repeatable and restore preserves later unrelated settings
+ok 2 - configure is repeatable and restore preserves later unrelated settings
+  ---
+  duration_ms: 58.476448
+  type: 'test'
+  ...
+# Subtest: restore refuses a backup referring to a different configuration file
+ok 3 - restore refuses a backup referring to a different configuration file
+  ---
+  duration_ms: 16.850712
+  type: 'test'
+  ...
+# Subtest: real BMCL Minecraft 1.20.1 converts to Prism components and preserves checksums
+ok 4 - real BMCL Minecraft 1.20.1 converts to Prism components and preserves checksums
+  ---
+  duration_ms: 30.20165
+  type: 'test'
+  ...
+# Subtest: real BMCL Minecraft 1.5.2 retains legacy launch traits and LWJGL 2
+ok 5 - real BMCL Minecraft 1.5.2 retains legacy launch traits and LWJGL 2
+  ---
+  duration_ms: 6.547804
+  type: 'test'
+  ...
+# Subtest: upstream Linux GLFW compatibility fix is applied after split-native artifact naming
+ok 6 - upstream Linux GLFW compatibility fix is applied after split-native artifact naming
+  ---
+  duration_ms: 12.020419
+  type: 'test'
+  ...
+# Subtest: Fabric installer metadata converts libraries and preserves intermediary dependency
+ok 7 - Fabric installer metadata converts libraries and preserves intermediary dependency
+  ---
+  duration_ms: 2.109944
+  type: 'test'
+  ...
+# Subtest: real Quilt installer uses Quilt main class and Fabric mappings
+ok 8 - real Quilt installer uses Quilt main class and Fabric mappings
+  ---
+  duration_ms: 1.294735
+  type: 'test'
+  ...
+# Subtest: Forge installer preserves processor libraries and supplies ForgeWrapper
+ok 9 - Forge installer preserves processor libraries and supplies ForgeWrapper
+  ---
+  duration_ms: 5.288789
+  type: 'test'
+  ...
+# Subtest: NeoForge installer produces a Prism patch with the matching game version
+ok 10 - NeoForge installer produces a Prism patch with the matching game version
+  ---
+  duration_ms: 11.721054
+  type: 'test'
+  ...
+# Subtest: Forge 1.12.2 modernized installer maps its empty artifact URL to the universal JAR
+ok 11 - Forge 1.12.2 modernized installer maps its empty artifact URL to the universal JAR
+  ---
+  duration_ms: 5.318804
+  type: 'test'
+  ...
+# Subtest: unsupported future compliance levels fail explicitly
+ok 12 - unsupported future compliance levels fail explicitly
+  ---
+  duration_ms: 1.457509
+  type: 'test'
+  ...
+# Subtest: conditional game arguments become supported Prism traits, not unconditional flags
+ok 13 - conditional game arguments become supported Prism traits, not unconditional flags
+  ---
+  duration_ms: 0.922662
+  type: 'test'
+  ...
+# Subtest: URL routing uses complete hostnames and MCIM mediafilez exception
+ok 14 - URL routing uses complete hostnames and MCIM mediafilez exception
+  ---
+  duration_ms: 0.420019
+  type: 'test'
+  ...
+# Subtest: MCIM Modrinth file URLs retain the canonical identity required by Prism
+ok 15 - MCIM Modrinth file URLs retain the canonical identity required by Prism
+  ---
+  duration_ms: 0.514625
+  type: 'test'
+  ...
+# Subtest: Prism CurseForge string IDs become MCIM integer arrays without modifying Modrinth hashes
+ok 16 - Prism CurseForge string IDs become MCIM integer arrays without modifying Modrinth hashes
+  ---
+  duration_ms: 0.59708
+  type: 'test'
+  ...
+# Subtest: invalid bulk IDs and invalid JSON are rejected
+ok 17 - invalid bulk IDs and invalid JSON are rejected
+  ---
+  duration_ms: 0.863605
+  type: 'test'
+  ...
+# Subtest: mirror request headers exclude credentials and HTTP hop headers
+ok 18 - mirror request headers exclude credentials and HTTP hop headers
+  ---
+  duration_ms: 0.43541
+  type: 'test'
+  ...
+# Subtest: Maven coordinate paths and timestamp normalization
+ok 19 - Maven coordinate paths and timestamp normalization
+  ---
+  duration_ms: 0.560548
+  type: 'test'
+  ...
+# Subtest: ZIP parser rejects truncated/untrusted input
+ok 20 - ZIP parser rejects truncated/untrusted input
+  ---
+  duration_ms: 1.056172
+  type: 'test'
+  ...
+# Subtest: legacy Forge branch coordinates retain plain Prism component version IDs
+ok 21 - legacy Forge branch coordinates retain plain Prism component version IDs
+  ---
+  duration_ms: 0.346984
+  type: 'test'
+  ...
+# Subtest: NeoForge 26.x coordinates resolve Minecraft release, snapshot and prerelease names
+ok 22 - NeoForge 26.x coordinates resolve Minecraft release, snapshot and prerelease names
+  ---
+  duration_ms: 0.804802
+  type: 'test'
+  ...
+# Subtest: 498 string IDs finish as complete JSON through gzip, batches and bounded concurrency with a slow upstream
+ok 23 - 498 string IDs finish as complete JSON through gzip, batches and bounded concurrency with a slow upstream
+  ---
+  duration_ms: 1087.479398
+  type: 'test'
+  ...
+# Subtest: a necessary failed batch returns its HTTP error and never a partial success
+ok 24 - a necessary failed batch returns its HTTP error and never a partial success
+  ---
+  duration_ms: 213.786042
+  type: 'test'
+  ...
+# Subtest: continuous slow progress still respects the overall bulk deadline and returns 504 before the client times out
+ok 25 - continuous slow progress still respects the overall bulk deadline and returns 504 before the client times out
+  ---
+  duration_ms: 776.453394
+  type: 'test'
+  ...
+# Subtest: missing IDs and duplicate input IDs preserve MCIM set semantics across batches
+ok 26 - missing IDs and duplicate input IDs preserve MCIM set semantics across batches
+  ---
+  duration_ms: 225.863765
+  type: 'test'
+  ...
+# Subtest: all IDs absent stays 404; an empty input keeps the upstream 400
+ok 27 - all IDs absent stays 404; an empty input keeps the upstream 400
+  ---
+  duration_ms: 177.700084
+  type: 'test'
+  ...
+# Subtest: an arbitrary 404 is not mistaken for a successful missing-ID batch
+ok 28 - an arbitrary 404 is not mistaken for a successful missing-ID batch
+  ---
+  duration_ms: 123.775942
+  type: 'test'
+  ...
+# Subtest: invalid JSON, unexpected project IDs, and inconsistent envelopes each fail the entire lookup
+ok 29 - invalid JSON, unexpected project IDs, and inconsistent envelopes each fail the entire lookup
+  ---
+  duration_ms: 491.978148
+  type: 'test'
+  ...
+# Subtest: /v1/mods/files keeps one request and the original fileIds payload
+ok 30 - /v1/mods/files keeps one request and the original fileIds payload
+  ---
+  duration_ms: 141.944719
+  type: 'test'
+  ...
+# Subtest: queued work can be cancelled without consuming or leaking a semaphore slot
+ok 31 - queued work can be cancelled without consuming or leaking a semaphore slot
+  ---
+  duration_ms: 1.751518
+  type: 'test'
+  ...
+# Subtest: compressed API decoding supports gzip, deflate, br and identity and bounds expanded output
+ok 32 - compressed API decoding supports gzip, deflate, br and identity and bounds expanded output
+  ---
+  duration_ms: 326.43136
+  type: 'test'
+  ...
+# Subtest: health endpoint and generated root/version indices are valid Prism JSON without stale hashes
+ok 33 - health endpoint and generated root/version indices are valid Prism JSON without stale hashes
+  ---
+  duration_ms: 136.902586
+  type: 'test'
+  ...
+# Subtest: CONNECT TLS certificate is valid for the API host and trusted only by this installation CA
+ok 34 - CONNECT TLS certificate is valid for the API host and trusted only by this installation CA
+  ---
+  duration_ms: 69.771576
+  type: 'test'
+  ...
+# Subtest: Qt loopback metadata requests also work in absolute HTTP proxy form
+ok 35 - Qt loopback metadata requests also work in absolute HTTP proxy form
+  ---
+  duration_ms: 4.940098
+  type: 'test'
+  ...
+# Subtest: existing Prism LWJGL 3.3.1 component selection can be served from BMCL without official recipes
+ok 36 - existing Prism LWJGL 3.3.1 component selection can be served from BMCL without official recipes
+  ---
+  duration_ms: 4.315136
+  type: 'test'
+  ...
+# Subtest: Prism CurseForge bulk POST request is converted end to end and credentials are not forwarded
+ok 37 - Prism CurseForge bulk POST request is converted end to end and credentials are not forwarded
+  ---
+  duration_ms: 201.473396
+  type: 'test'
+  ...
+# Subtest: binary downloads stream through MCIM and retain Range/206 semantics
+ok 38 - binary downloads stream through MCIM and retain Range/206 semantics
+  ---
+  duration_ms: 100.581035
+  type: 'test'
+  ...
+# Subtest: missing CurseForge descriptions use a disclosed, HTML-escaped MCIM summary; unrelated 404s remain errors
+ok 39 - missing CurseForge descriptions use a disclosed, HTML-escaped MCIM summary; unrelated 404s remain errors
+  ---
+  duration_ms: 37.526704
+  type: 'test'
+  ...
+# Subtest: HEAD preserves file length and sends no response body
+ok 40 - HEAD preserves file length and sends no response body
+  ---
+  duration_ms: 7.701169
+  type: 'test'
+  ...
+# Subtest: strict mode reports mirror file failures without silently using the original CDN
+ok 41 - strict mode reports mirror file failures without silently using the original CDN
+  ---
+  duration_ms: 6.756676
+  type: 'test'
+  ...
+# Subtest: CONNECT Host mismatch is rejected inside a valid TLS connection
+ok 42 - CONNECT Host mismatch is rejected inside a valid TLS connection
+  ---
+  duration_ms: 9.368751
+  type: 'test'
+  ...
+# Subtest: write requests and invalid metadata/Host paths are rejected
+ok 43 - write requests and invalid metadata/Host paths are rejected
+  ---
+  duration_ms: 12.288333
+  type: 'test'
+  ...
+# Subtest: Microsoft HTTPS remains end-to-end encrypted without bridge certificate substitution
+ok 44 - Microsoft HTTPS remains end-to-end encrypted without bridge certificate substitution
+  ---
+  duration_ms: 183.999357
+  type: 'test'
+  ...
+# Subtest: concurrent identical metadata requests are coalesced and invalid JSON is not cached
+ok 45 - concurrent identical metadata requests are coalesced and invalid JSON is not cached
+  ---
+  duration_ms: 7.098724
+  type: 'test'
+  ...
+# Subtest: temporary mirror HTTP failures retry within the configured limit
+ok 46 - temporary mirror HTTP failures retry within the configured limit
+  ---
+  duration_ms: 5.872959
+  type: 'test'
+  ...
+# Subtest: untrusted interception certificates fail TLS validation
+ok 47 - untrusted interception certificates fail TLS validation
+  ---
+  duration_ms: 5.521305
+  type: 'test'
+  ...
+# Subtest: certificate issuance is limited to configured mirror hosts
+ok 48 - certificate issuance is limited to configured mirror hosts
+  ---
+  duration_ms: 0.305128
+  type: 'test'
+  ...
+# Subtest: long downloads with continuing progress are not aborted by a total-duration timer
+ok 49 - long downloads with continuing progress are not aborted by a total-duration timer
+  ---
+  duration_ms: 2012.760064
+  type: 'test'
+  ...
+# Subtest: connections that never return headers are bounded by a timeout
+ok 50 - connections that never return headers are bounded by a timeout
+  ---
+  duration_ms: 81.666832
+  type: 'test'
+  ...
+# Subtest: a failing BMCL version endpoint can use its mirrored package URL while staying at BMCL
+ok 51 - a failing BMCL version endpoint can use its mirrored package URL while staying at BMCL
+  ---
+  duration_ms: 23.858795
+  type: 'test'
+  ...
+# Subtest: Prism metadata protocol accepts encoded Mojang version IDs containing spaces
+ok 52 - Prism metadata protocol accepts encoded Mojang version IDs containing spaces
+  ---
+  duration_ms: 2.197295
+  type: 'test'
+  ...
+# Subtest: encoded separators, control bytes and nested escapes never become upstream metadata paths
+ok 53 - encoded separators, control bytes and nested escapes never become upstream metadata paths
+  ---
+  duration_ms: 0.806274
+  type: 'test'
+  ...
+# Subtest: LegacyFTB keeps both original HTTPS URLs outside certificate replacement and mirror routing
+ok 54 - LegacyFTB keeps both original HTTPS URLs outside certificate replacement and mirror routing
+  ---
+  duration_ms: 0.340562
+  type: 'test'
+  ...
+# Subtest: legacy hashless disk index and partial component are preserved as evidence during repair
+ok 55 - legacy hashless disk index and partial component are preserved as evidence during repair
+  ---
+  duration_ms: 11.318987
+  type: 'test'
+  ...
+# Subtest: running Prism prevents repair and restore before any disk mutation
+ok 56 - running Prism prevents repair and restore before any disk mutation
+  ---
+  duration_ms: 6.489519
+  type: 'test'
+  ...
+# Subtest: first setup archives metadata once, and undo restores the exact original snapshot
+ok 57 - first setup archives metadata once, and undo restores the exact original snapshot
+  ---
+  duration_ms: 6.416634
+  type: 'test'
+  ...
+# Subtest: legacy undo retains mixed cache backups and starts the original source with fresh metadata
+ok 58 - legacy undo retains mixed cache backups and starts the original source with fresh metadata
+  ---
+  duration_ms: 3.643099
+  type: 'test'
+  ...
+# Subtest: explicit repair isolates a later cache even after a successful previous migration
+ok 59 - explicit repair isolates a later cache even after a successful previous migration
+  ---
+  duration_ms: 4.091075
+  type: 'test'
+  ...
+# Subtest: changing the metadata endpoint isolates the active cache without losing the original snapshot
+ok 60 - changing the metadata endpoint isolates the active cache without losing the original snapshot
+  ---
+  duration_ms: 6.393048
+  type: 'test'
+  ...
+# Subtest: repair requires the selected Prism to have a matching bridge source and original backup
+ok 61 - repair requires the selected Prism to have a matching bridge source and original backup
+  ---
+  duration_ms: 2.651191
+  type: 'test'
+  ...
+# Subtest: a completed rename before its journal checkpoint resumes without moving or losing data twice
+ok 62 - a completed rename before its journal checkpoint resumes without moving or losing data twice
+  ---
+  duration_ms: 7.28699
+  type: 'test'
+  ...
+# Subtest: a config commit failure can be recovered by undo using the recorded directory moves
+ok 63 - a config commit failure can be recovered by undo using the recorded directory moves
+  ---
+  duration_ms: 3.088068
+  type: 'test'
+  ...
+# Subtest: conflicting directories after interruption are refused without overwriting either copy
+ok 64 - conflicting directories after interruption are refused without overwriting either copy
+  ---
+  duration_ms: 4.144247
+  type: 'test'
+  ...
+# Subtest: a missing original snapshot stops undo before moving the current metadata
+ok 65 - a missing original snapshot stops undo before moving the current metadata
+  ---
+  duration_ms: 2.62638
+  type: 'test'
+  ...
+# Subtest: undo resumes after restoring the original snapshot but before recording that step
+ok 66 - undo resumes after restoring the original snapshot but before recording that step
+  ---
+  duration_ms: 2.160851
+  type: 'test'
+  ...
+# Subtest: migration journals cannot reference files outside the Prism metadata backup names
+ok 67 - migration journals cannot reference files outside the Prism metadata backup names
+  ---
+  duration_ms: 1.290241
+  type: 'test'
+  ...
+# Subtest: symbolic-link metadata is refused rather than traversed
+ok 68 - symbolic-link metadata is refused rather than traversed
+  ---
+  duration_ms: 1.023831
+  type: 'test'
+  ...
+# Subtest: process detection rejects active Prism and unknown detection results on Windows and POSIX
+ok 69 - process detection rejects active Prism and unknown detection results on Windows and POSIX
+  ---
+  duration_ms: 1.042529
+  type: 'test'
+  ...
+# Subtest: direct CLI guard sees a real process named prismlauncher before allowing later setup
+ok 70 - direct CLI guard sees a real process named prismlauncher before allowing later setup
+  ---
+  duration_ms: 125.261612
+  type: 'test'
+  ...
+1..70
+# tests 70
+# suites 0
+# pass 70
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7813.877943

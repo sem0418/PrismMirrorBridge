@@ -1,0 +1,62 @@
+[
+  {
+    "http_code": 0,
+    "time_namelookup": 0.0,
+    "time_connect": 0.0,
+    "time_appconnect": 0.0,
+    "time_starttransfer": 0.0,
+    "time_total": 0.001339,
+    "size_download": 0,
+    "ssl_verify_result": 0,
+    "errormsg": "Could not resolve host: dist.creeper.host",
+    "mode": "direct",
+    "name": "thirdparty.xml",
+    "exit": 6
+  },
+  {
+    "http_code": 0,
+    "time_namelookup": 0.0,
+    "time_connect": 0.0,
+    "time_appconnect": 0.0,
+    "time_starttransfer": 0.0,
+    "time_total": 0.001812,
+    "size_download": 0,
+    "ssl_verify_result": 0,
+    "errormsg": "Could not resolve host: dist.creeper.host",
+    "mode": "direct",
+    "name": "modpacks.xml",
+    "exit": 6
+  },
+  {
+    "http_code": 200,
+    "time_namelookup": 4.3e-05,
+    "time_connect": 0.00014,
+    "time_appconnect": 4.749608,
+    "time_starttransfer": 4.928005,
+    "time_total": 5.000196,
+    "size_download": 149197,
+    "ssl_verify_result": 0,
+    "errormsg": null,
+    "mode": "environment-proxy",
+    "name": "thirdparty.xml",
+    "exit": 0,
+    "xmlRoot": "modpacks",
+    "xmlChildren": 8
+  },
+  {
+    "http_code": 200,
+    "time_namelookup": 0.000367,
+    "time_connect": 0.000588,
+    "time_appconnect": 4.750354,
+    "time_starttransfer": 4.840109,
+    "time_total": 4.885816,
+    "size_download": 56155,
+    "ssl_verify_result": 0,
+    "errormsg": null,
+    "mode": "environment-proxy",
+    "name": "modpacks.xml",
+    "exit": 0,
+    "xmlRoot": "modpacks",
+    "xmlChildren": 58
+  }
+]

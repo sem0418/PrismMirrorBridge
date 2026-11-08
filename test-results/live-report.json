@@ -1,11 +1,11 @@
 {
-  "startedAt": "2026-11-08T06:06:28.617Z",
+  "startedAt": "2026-11-08T08:09:07.927Z",
   "node": "24.22.1",
   "tests": [
     {
       "name": "Prism component index",
       "passed": true,
-      "durationMs": 38,
+      "durationMs": 32,
       "details": {
         "packages": 8
       }
@@ -13,7 +13,7 @@
     {
       "name": "BMCL Minecraft version list",
       "passed": true,
-      "durationMs": 10003,
+      "durationMs": 10109,
       "details": {
         "versions": 922
       }
@@ -21,7 +21,7 @@
     {
       "name": "BMCL Minecraft 1.20.1 conversion",
       "passed": true,
-      "durationMs": 8328,
+      "durationMs": 8681,
       "details": {
         "uid": "net.minecraft",
         "java": [
@@ -33,7 +33,7 @@
     {
       "name": "BMCL LWJGL 3 native component",
       "passed": true,
-      "durationMs": 7,
+      "durationMs": 67,
       "details": {
         "libraries": 63
       }
@@ -41,7 +41,7 @@
     {
       "name": "BMCL Minecraft 1.12.2",
       "passed": true,
-      "durationMs": 4534,
+      "durationMs": 3571,
       "details": {
         "java": [
           8
@@ -52,7 +52,7 @@
     {
       "name": "BMCL Minecraft 1.5.2",
       "passed": true,
-      "durationMs": 5183,
+      "durationMs": 7694,
       "details": {
         "java": [
           8
@@ -67,7 +67,7 @@
     {
       "name": "BMCL Minecraft 26.3",
       "passed": true,
-      "durationMs": 5563,
+      "durationMs": 499,
       "details": {
         "java": [
           25
@@ -83,7 +83,7 @@
     {
       "name": "BMCL Minecraft 3D Shareware v1.34",
       "passed": true,
-      "durationMs": 5050,
+      "durationMs": 9040,
       "details": {
         "java": [
           8
@@ -96,7 +96,7 @@
     {
       "name": "BMCL component net.fabricmc.fabric-loader/0.16.14",
       "passed": true,
-      "durationMs": 116,
+      "durationMs": 2156,
       "details": {
         "libraries": 7,
         "mavenFiles": 0,
@@ -106,7 +106,7 @@
     {
       "name": "BMCL component net.fabricmc.intermediary/1.20.1",
       "passed": true,
-      "durationMs": 100,
+      "durationMs": 1255,
       "details": {
         "libraries": 1,
         "mavenFiles": 0
@@ -115,7 +115,7 @@
     {
       "name": "BMCL component org.quiltmc.quilt-loader/0.23.0",
       "passed": true,
-      "durationMs": 13241,
+      "durationMs": 18710,
       "details": {
         "libraries": 12,
         "mavenFiles": 0,
@@ -125,7 +125,7 @@
     {
       "name": "BMCL component net.minecraftforge/10.13.4.1614",
       "passed": true,
-      "durationMs": 5915,
+      "durationMs": 12314,
       "details": {
         "libraries": 18,
         "mavenFiles": 0,
@@ -135,7 +135,7 @@
     {
       "name": "BMCL component net.minecraftforge/14.23.5.2860",
       "passed": true,
-      "durationMs": 434,
+      "durationMs": 4688,
       "details": {
         "libraries": 20,
         "mavenFiles": 0,
@@ -145,7 +145,7 @@
     {
       "name": "BMCL component net.minecraftforge/47.3.0",
       "passed": true,
-      "durationMs": 943,
+      "durationMs": 9579,
       "details": {
         "libraries": 30,
         "mavenFiles": 37,
@@ -155,7 +155,7 @@
     {
       "name": "BMCL component net.neoforged/21.1.1",
       "passed": true,
-      "durationMs": 2106,
+      "durationMs": 16002,
       "details": {
         "libraries": 45,
         "mavenFiles": 86,
@@ -165,7 +165,7 @@
     {
       "name": "BMCL component net.neoforged/26.3.0.101",
       "passed": true,
-      "durationMs": 764,
+      "durationMs": 7449,
       "details": {
         "libraries": 28,
         "mavenFiles": 31,
@@ -175,7 +175,7 @@
     {
       "name": "MCIM Modrinth search over CONNECT/TLS",
       "passed": true,
-      "durationMs": 5413,
+      "durationMs": 5450,
       "details": {
         "title": "Sodium"
       }
@@ -183,7 +183,7 @@
     {
       "name": "MCIM Modrinth version filtering",
       "passed": true,
-      "durationMs": 1142,
+      "durationMs": 653,
       "details": {
         "versions": 13
       }
@@ -191,7 +191,7 @@
     {
       "name": "MCIM CurseForge file metadata",
       "passed": true,
-      "durationMs": 534,
+      "durationMs": 513,
       "details": {
         "modId": 238222,
         "fileId": 9394362,
@@ -202,7 +202,7 @@
     {
       "name": "Prism string IDs to MCIM CurseForge bulk integers",
       "passed": true,
-      "durationMs": 584,
+      "durationMs": 391,
       "details": {
         "projects": 1
       }
@@ -210,7 +210,7 @@
     {
       "name": "MCIM CurseForge bulk file IDs",
       "passed": true,
-      "durationMs": 339,
+      "durationMs": 411,
       "details": {
         "files": 1
       }
@@ -218,78 +218,10 @@
     {
       "name": "CurseForge description adapts a real MCIM project summary",
       "passed": true,
-      "durationMs": 2361,
+      "durationMs": 4181,
       "details": {
         "source": "mcim-project-summary",
         "characters": 141
-      }
-    },
-    {
-      "name": "MCIM CurseForge thumbnail via verified CONNECT TLS",
-      "passed": true,
-      "durationMs": 5836,
-      "details": {
-        "bytes": 16376,
-        "sha256": "a77df0f11ffe974e1a03b607724099847ba9e928af5bfdc36d10795b874f59f7"
-      }
-    },
-    {
-      "name": "MCIM Modrinth JAR download and SHA512/SHA1",
-      "passed": true,
-      "durationMs": 5751,
-      "details": {
-        "filename": "sodium-fabric-0.5.11+mc1.20.1.jar",
-        "bytes": 968419,
-        "sha1": "c4293c1483f3b39c1c6c4c69143e8bb2c6e53daf"
-      }
-    },
-    {
-      "name": "MCIM CurseForge JAR download and SHA1",
-      "passed": true,
-      "durationMs": 10318,
-      "details": {
-        "filename": "jei-1.20.1-fabric-15.74.0.234.jar",
-        "bytes": 4865333,
-        "sha1": "7b971a4a1b529d5d2390ceb6eaa3255cd63cd62c"
-      }
-    },
-    {
-      "name": "BMCL Windows native JAR and SHA1",
-      "passed": true,
-      "durationMs": 245,
-      "details": {
-        "library": "org.lwjgl:lwjgl-glfw-natives-windows:3.3.1",
-        "bytes": 145512,
-        "sha1": "ed892f945cf7e79c8756796f32d00fa4ceaf573b"
-      }
-    },
-    {
-      "name": "Prism Linux GLFW compatibility JAR and SHA1",
-      "passed": true,
-      "durationMs": 4820,
-      "details": {
-        "library": "org.lwjgl:lwjgl-glfw-natives-linux:3.3.2-lwjgl.1",
-        "bytes": 115553,
-        "sha1": "0766bb0e8e829598b1c8052fd8173c62af741c52"
-      }
-    },
-    {
-      "name": "BMCL asset index and asset content SHA1",
-      "passed": true,
-      "durationMs": 619,
-      "details": {
-        "asset": "icons/icon_128x128.png",
-        "bytes": 9101,
-        "sha1": "b62ca8ec10d07e6bf5ac8dae0c8c1d2e6a1e3356"
-      }
-    },
-    {
-      "name": "BMCL Minecraft client JAR download and SHA1",
-      "passed": true,
-      "durationMs": 789,
-      "details": {
-        "bytes": 23028853,
-        "sha1": "0c3ec587af28e5a785c0b4a7b8a30f9a8f78f838"
       }
     },
     {
@@ -304,15 +236,30 @@
   "authenticationLoginTested": false,
   "fullGameLaunchTested": false,
   "windowsTrustTested": false,
+  "scope": "api-only",
+  "skippedFileChecks": [
+    "MCIM CurseForge thumbnail via verified CONNECT TLS",
+    "MCIM Modrinth JAR download and SHA512/SHA1",
+    "MCIM CurseForge JAR download and SHA1",
+    "BMCL Windows native JAR and SHA1",
+    "Prism Linux GLFW compatibility JAR and SHA1",
+    "BMCL asset index and asset content SHA1",
+    "BMCL Minecraft client JAR download and SHA1"
+  ],
   "counts": {
-    "requests": 26,
+    "requests": 22,
     "errors": 0,
-    "bmcl": 26,
-    "mcim": 9,
+    "bmcl": 25,
+    "mcim": 6,
     "compatibilityRecipes": 0,
     "fileFallback": 0,
-    "tunnels": 0
+    "tunnels": 0,
+    "bulkModRequests": 1,
+    "bulkModBatches": 1,
+    "bulkWireBytes": 7070,
+    "bulkDecodedBytes": 35863,
+    "bulkJSONParseMs": 0.29
   },
-  "finishedAt": "2026-11-08T06:08:09.699Z",
+  "finishedAt": "2026-11-08T08:11:11.383Z",
   "passed": true
 }

@@ -1,6 +1,7 @@
-import { readFileSync, writeFileSync, existsSync, renameSync } from 'node:fs';
+import * as fs from 'node:fs';
 import { join, resolve } from 'node:path';
 import { randomBytes } from 'node:crypto';
+import { assertPrismClosed, resumeMetadataSwitch, switchMetadata, validateMetadataState } from './prism-metadata-state.mjs';
 
 export const BRIDGE_KEYS = ['MetaURLOverride', 'ResourceURLOverride', 'ResourceURL', 'ProxyType', 'ProxyAddr', 'ProxyHostName',
   'ProxyPort', 'ProxyUser', 'ProxyUsername', 'ProxyPass', 'ProxyPassword'];
@@ -37,37 +38,66 @@ export function patchGeneral(content, changes) {
 export function prismConfigPath(path) {
   return resolve(path.endsWith('.cfg') ? path : join(path, 'prismlauncher.cfg'));
 }
-function atomicWrite(file, content) {
-  const temporary = file + '.bridge-' + randomBytes(6).toString('hex') + '.tmp';
-  writeFileSync(temporary, content, { mode: 0o600, flag: 'wx' });
-  renameSync(temporary, file);
+function readBackup(file, backup, io) {
+  const stat = io.lstatSync(backup);
+  if (!stat.isFile() || stat.isSymbolicLink()) throw new Error('Unrecognized backup file');
+  const saved = JSON.parse(io.readFileSync(backup, 'utf8'));
+  if (saved.file !== file || saved.owner !== 'PrismMirrorBridge/1' || !saved.values
+      || Object.values(saved.values).some(v => v !== null && (typeof v !== 'string' || /[\r\n]/.test(v))))
+    throw new Error('Backup does not match selected Prism configuration');
+  validateMetadataState(saved, BRIDGE_KEYS);
+  return saved;
 }
-export function configurePrism(path, config) {
+const patch = patchGeneral;
+function archiveBackup(backup, io) {
+  const archived = backup + '.restored-' + Date.now() + '-' + randomBytes(6).toString('hex');
+  io.renameSync(backup, archived); return archived;
+}
+export function configurePrism(path, config, { io = fs, checkClosed = assertPrismClosed, forceMetadata = false } = {}) {
+  checkClosed();
   const file = prismConfigPath(path);
-  if (!existsSync(file)) throw new Error('Select an existing prismlauncher.cfg; run Prism once and close it first.');
-  const content = readFileSync(file, 'utf8'), previous = getGeneral(content), backup = file + '.bridge-backup.json';
+  if (!io.existsSync(file)) throw new Error('Select an existing prismlauncher.cfg; run Prism once and close it first.');
+  const fileStat = io.lstatSync(file);
+  if (!fileStat.isFile() || fileStat.isSymbolicLink()) throw new Error('Select the real Prism configuration file, not a symbolic link.');
+  const backup = file + '.bridge-backup.json';
   const expected = `http://127.0.0.1:${config.port}/meta/v1/`;
-  if (existsSync(backup)) {
-    const saved = JSON.parse(readFileSync(backup, 'utf8'));
-    if (saved.file !== file || saved.owner !== 'PrismMirrorBridge/1') throw new Error('Unrecognized backup file');
-  } else {
-    const saved = { owner: 'PrismMirrorBridge/1', file, createdAt: new Date().toISOString(), values: Object.fromEntries(BRIDGE_KEYS.map(k => [k, previous[k] ?? null])) };
-    writeFileSync(backup, JSON.stringify(saved, null, 2), { mode: 0o600, flag: 'wx' });
+  let saved, freshBackup = false;
+  if (io.existsSync(backup)) {
+    saved = readBackup(file, backup, io);
+    resumeMetadataSwitch({ file, backup, saved, patch, io, checkClosed });
+    if (saved.metadataState?.lastOperation === 'restore') { archiveBackup(backup, io); saved = undefined; }
+  }
+  const previous = getGeneral(io.readFileSync(file, 'utf8'));
+  if (!saved) {
+    if (previous.MetaURLOverride === expected) throw new Error('Prism already points to this bridge but its original backup is missing. Preserve the current files and restore your original network settings before a new setup.');
+    saved = { owner: 'PrismMirrorBridge/1', file, createdAt: new Date().toISOString(), values: Object.fromEntries(BRIDGE_KEYS.map(k => [k, previous[k] ?? null])) };
+    io.writeFileSync(backup, JSON.stringify(saved, null, 2), { mode: 0o600, flag: 'wx' });
+    freshBackup = true;
   }
   const changes = Object.fromEntries(BRIDGE_KEYS.map(k => [k, null]));
   Object.assign(changes, { MetaURLOverride: expected, ResourceURLOverride: `http://127.0.0.1:${config.port}/assets/`,
     ProxyType: 'HTTP', ProxyAddr: '127.0.0.1', ProxyPort: String(config.port), ProxyUser: '', ProxyPass: '' });
-  atomicWrite(file, patchGeneral(content, changes));
-  // Do not delete instances or cached metadata. The new metadata index intentionally
-  // omits upstream metadata SHA256 references and triggers remote refreshes.
-  return { file, backup, previousProxy: previous.ProxyType || 'None' };
+  const metadata = switchMetadata({ file, backup, saved, changes, operation: 'configure', freshBackup, force: forceMetadata, patch, readGeneral: getGeneral, io, checkClosed });
+  return { file, backup, previousProxy: previous.ProxyType || 'None', metadata };
 }
-export function restorePrism(path) {
+export function repairPrismMetadata(path, config, options = {}) {
+  const io = options.io || fs, file = prismConfigPath(path);
+  (options.checkClosed || assertPrismClosed)();
+  const current = getGeneral(io.readFileSync(file, 'utf8'));
+  if (current.MetaURLOverride !== `http://127.0.0.1:${config.port}/meta/v1/` || !io.existsSync(file + '.bridge-backup.json'))
+    throw new Error('Repair requires an existing bridge configuration and its original backup. Run setup for the selected Prism directory first.');
+  return configurePrism(path, config, { ...options, forceMetadata: true });
+}
+export function restorePrism(path, { io = fs, checkClosed = assertPrismClosed } = {}) {
+  checkClosed();
   const file = prismConfigPath(path), backup = file + '.bridge-backup.json';
-  const saved = JSON.parse(readFileSync(backup, 'utf8'));
-  if (saved.owner !== 'PrismMirrorBridge/1' || saved.file !== file) throw new Error('Backup does not match selected Prism configuration');
+  const fileStat = io.lstatSync(file);
+  if (!fileStat.isFile() || fileStat.isSymbolicLink()) throw new Error('Select the real Prism configuration file, not a symbolic link.');
+  const saved = readBackup(file, backup, io);
+  resumeMetadataSwitch({ file, backup, saved, patch, io, checkClosed });
   const values = Object.fromEntries(BRIDGE_KEYS.map(k => [k, saved.values[k] ?? null]));
-  atomicWrite(file, patchGeneral(readFileSync(file, 'utf8'), values));
-  renameSync(backup, backup + '.restored-' + Date.now());
-  return { file, backup };
+  const metadata = saved.metadataState?.lastOperation === 'restore' ? { migrated: false }
+    : switchMetadata({ file, backup, saved, changes: values, operation: 'restore', patch, readGeneral: getGeneral, io, checkClosed });
+  const archivedBackup = archiveBackup(backup, io);
+  return { file, backup: archivedBackup, metadata };
 }

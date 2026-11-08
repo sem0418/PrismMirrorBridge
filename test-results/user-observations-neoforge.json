@@ -1,0 +1,22 @@
+{
+  "source": "User-provided observations; not files or memory read by this assistant",
+  "oldOfficialComponent": {
+    "version": "21.1.259",
+    "isFailingVersion": false,
+    "predatesBridgeSetup": true
+  },
+  "originalMetaURLOverridePresent": false,
+  "currentDiskIndex": {
+    "containsSHA256": false,
+    "isDirectSourceOfOfficialExpectation": false,
+    "createdAfterBridgeSetup": true
+  },
+  "failingVersion": "21.1.265",
+  "expectedSHA256": "63d850bb1b842adbccb4753027587b5778215c0ed305bdaca080f52e8799021f",
+  "actualSHA256": "b7542fda4c29695219c27cac053947ea85a691044d0fb17690889540e7dd3ce1",
+  "temporaryDownloadBytes": 36042,
+  "formalComponentWritten": false,
+  "historicalOfficialIndexLoadSequence": "unknown",
+  "specificUserMemoryObjectInspected": false,
+  "privacyNote": "Exact user-machine timestamps omitted from public records; relevant ordering and component versions retained."
+}

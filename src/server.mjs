@@ -8,6 +8,8 @@ import { ensureCA, CertificateStore } from './certificates.mjs';
 import { MetadataService } from './metadata.mjs';
 import { INTERCEPT_HOSTS, MOD_API_HOSTS, MOD_FILE_HOSTS, mirrorURL, normalizeModJSON, sanitizedHeaders } from './routing.mjs';
 import { adaptModRequest, curseForgeSummaryDescription } from './mod-adapter.mjs';
+import { curseForgeBulkMods } from './curseforge-bulk.mjs';
+import { VERSION } from './version.mjs';
 
 function jsonResponse(res, value, status = 200, head = false, source = 'bridge') {
   const b = Buffer.from(JSON.stringify(value));
@@ -29,7 +31,8 @@ function publicHost(host) {
 export class Bridge {
   constructor(config, { transport, log = console.log } = {}) {
     this.config = config; this.log = log; this.t = transport || new Transport(config);
-    this.stats = { requests: 0, errors: 0, bmcl: 0, mcim: 0, compatibilityRecipes: 0, fileFallback: 0, tunnels: 0 };
+    this.stats = { requests: 0, errors: 0, bmcl: 0, mcim: 0, compatibilityRecipes: 0, fileFallback: 0, tunnels: 0,
+      bulkModRequests: 0, bulkModBatches: 0, bulkWireBytes: 0, bulkDecodedBytes: 0, bulkJSONParseMs: 0 };
     this.meta = new MetadataService(config, this.t, source => {
       if (source === 'bmcl') this.stats.bmcl++; else if (source === 'prism-compatibility') this.stats.compatibilityRecipes++;
     });
@@ -82,7 +85,7 @@ export class Bridge {
     if (!new RegExp(`^(127\\.0\\.0\\.1|localhost):${this.port}$`, 'i').test(h)) throw new HTTPError(403, 'Invalid local Host header');
     const url = new URL(req.url, `http://127.0.0.1:${this.port}`);
     if (!['GET', 'HEAD'].includes(req.method)) throw new HTTPError(405, 'Local endpoints accept GET/HEAD only');
-    if (url.pathname === '/health') return jsonResponse(res, { ok: true, version: '1.0.0', metaURL: `http://127.0.0.1:${this.port}/meta/v1/`,
+    if (url.pathname === '/health') return jsonResponse(res, { ok: true, version: VERSION, metaURL: `http://127.0.0.1:${this.port}/meta/v1/`,
       proxy: `127.0.0.1:${this.port}`, counts: this.stats, compatibilityRecipes: this.config.compatibilityRecipes, fileFallback: this.config.fileFallback }, 200, req.method === 'HEAD');
     if (url.pathname.startsWith('/meta/v1/')) return jsonResponse(res, await this.meta.request(url.pathname.slice(9)), 200, req.method === 'HEAD', 'bmcl-converter');
     if (url.pathname.startsWith('/assets/')) return this.relay(req, res, this.config.bmcl + url.pathname + url.search, 'bmcl');
@@ -105,9 +108,19 @@ export class Bridge {
       let value, responseSource = 'mcim';
       if (req.method === 'POST') {
         const body = adaptModRequest(provider, await readBody(req));
-        const b = await this.t.limit.run(() => this.t.bytes(target, { method: 'POST', body,
+        if (provider === 'curseforge' && url.pathname === '/v1/mods') {
+          this.stats.bulkModRequests++;
+          const client = new AbortController();
+          const closed = () => { if (!res.writableEnded) client.abort(new Error('Client disconnected')); };
+          res.once('close', closed);
+          try {
+            value = await curseForgeBulkMods(this.t, target, body, this.config, { signal: client.signal,
+              onBatch: () => { this.stats.bulkModBatches++; }, onMetrics: m => {
+                this.stats.bulkWireBytes += m.wireBytes; this.stats.bulkDecodedBytes += m.decodedBytes; this.stats.bulkJSONParseMs += m.parseMs;
+              } });
+          } finally { res.removeListener('close', closed); }
+        } else value = await this.t.limit.run(() => this.t.requestJSON(target, { method: 'POST', body,
           headers: { 'content-type': 'application/json', 'content-length': body.length } }));
-        try { value = JSON.parse(b.toString('utf8')); } catch { throw new HTTPError(502, 'MCIM returned invalid JSON'); }
       } else {
         try { value = await this.t.json(target); }
         catch (e) {

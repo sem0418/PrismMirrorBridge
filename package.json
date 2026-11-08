@@ -1,6 +1,6 @@
 {
   "name": "prism-mirror-bridge",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "private": true,
   "type": "module",
   "description": "Standalone BMCLAPI to Prism metadata converter and selective MCIM proxy",

@@ -1,0 +1,268 @@
+TAP version 13
+# Subtest: INI patching preserves unrelated content, sections, BOM and Windows newlines
+ok 1 - INI patching preserves unrelated content, sections, BOM and Windows newlines
+  ---
+  duration_ms: 1.816015
+  type: 'test'
+  ...
+# Subtest: configure is repeatable and restore preserves later unrelated settings
+ok 2 - configure is repeatable and restore preserves later unrelated settings
+  ---
+  duration_ms: 3.358221
+  type: 'test'
+  ...
+# Subtest: restore refuses a backup referring to a different configuration file
+ok 3 - restore refuses a backup referring to a different configuration file
+  ---
+  duration_ms: 0.899747
+  type: 'test'
+  ...
+# Subtest: real BMCL Minecraft 1.20.1 converts to Prism components and preserves checksums
+ok 4 - real BMCL Minecraft 1.20.1 converts to Prism components and preserves checksums
+  ---
+  duration_ms: 21.854298
+  type: 'test'
+  ...
+# Subtest: real BMCL Minecraft 1.5.2 retains legacy launch traits and LWJGL 2
+ok 5 - real BMCL Minecraft 1.5.2 retains legacy launch traits and LWJGL 2
+  ---
+  duration_ms: 4.230411
+  type: 'test'
+  ...
+# Subtest: upstream Linux GLFW compatibility fix is applied after split-native artifact naming
+ok 6 - upstream Linux GLFW compatibility fix is applied after split-native artifact naming
+  ---
+  duration_ms: 13.215037
+  type: 'test'
+  ...
+# Subtest: Fabric installer metadata converts libraries and preserves intermediary dependency
+ok 7 - Fabric installer metadata converts libraries and preserves intermediary dependency
+  ---
+  duration_ms: 1.864893
+  type: 'test'
+  ...
+# Subtest: real Quilt installer uses Quilt main class and Fabric mappings
+ok 8 - real Quilt installer uses Quilt main class and Fabric mappings
+  ---
+  duration_ms: 1.013052
+  type: 'test'
+  ...
+# Subtest: Forge installer preserves processor libraries and supplies ForgeWrapper
+ok 9 - Forge installer preserves processor libraries and supplies ForgeWrapper
+  ---
+  duration_ms: 3.495608
+  type: 'test'
+  ...
+# Subtest: NeoForge installer produces a Prism patch with the matching game version
+ok 10 - NeoForge installer produces a Prism patch with the matching game version
+  ---
+  duration_ms: 7.634117
+  type: 'test'
+  ...
+# Subtest: Forge 1.12.2 modernized installer maps its empty artifact URL to the universal JAR
+ok 11 - Forge 1.12.2 modernized installer maps its empty artifact URL to the universal JAR
+  ---
+  duration_ms: 2.544479
+  type: 'test'
+  ...
+# Subtest: unsupported future compliance levels fail explicitly
+ok 12 - unsupported future compliance levels fail explicitly
+  ---
+  duration_ms: 1.464874
+  type: 'test'
+  ...
+# Subtest: conditional game arguments become supported Prism traits, not unconditional flags
+ok 13 - conditional game arguments become supported Prism traits, not unconditional flags
+  ---
+  duration_ms: 0.933933
+  type: 'test'
+  ...
+# Subtest: URL routing uses complete hostnames and MCIM mediafilez exception
+ok 14 - URL routing uses complete hostnames and MCIM mediafilez exception
+  ---
+  duration_ms: 0.364334
+  type: 'test'
+  ...
+# Subtest: MCIM Modrinth file URLs retain the canonical identity required by Prism
+ok 15 - MCIM Modrinth file URLs retain the canonical identity required by Prism
+  ---
+  duration_ms: 0.891956
+  type: 'test'
+  ...
+# Subtest: Prism CurseForge string IDs become MCIM integer arrays without modifying Modrinth hashes
+ok 16 - Prism CurseForge string IDs become MCIM integer arrays without modifying Modrinth hashes
+  ---
+  duration_ms: 1.068608
+  type: 'test'
+  ...
+# Subtest: invalid bulk IDs and invalid JSON are rejected
+ok 17 - invalid bulk IDs and invalid JSON are rejected
+  ---
+  duration_ms: 0.981416
+  type: 'test'
+  ...
+# Subtest: mirror request headers exclude credentials and HTTP hop headers
+ok 18 - mirror request headers exclude credentials and HTTP hop headers
+  ---
+  duration_ms: 0.795161
+  type: 'test'
+  ...
+# Subtest: Maven coordinate paths and timestamp normalization
+ok 19 - Maven coordinate paths and timestamp normalization
+  ---
+  duration_ms: 0.382179
+  type: 'test'
+  ...
+# Subtest: ZIP parser rejects truncated/untrusted input
+ok 20 - ZIP parser rejects truncated/untrusted input
+  ---
+  duration_ms: 0.523988
+  type: 'test'
+  ...
+# Subtest: legacy Forge branch coordinates retain plain Prism component version IDs
+ok 21 - legacy Forge branch coordinates retain plain Prism component version IDs
+  ---
+  duration_ms: 0.463834
+  type: 'test'
+  ...
+# Subtest: NeoForge 26.x coordinates resolve Minecraft release, snapshot and prerelease names
+ok 22 - NeoForge 26.x coordinates resolve Minecraft release, snapshot and prerelease names
+  ---
+  duration_ms: 0.401991
+  type: 'test'
+  ...
+# Subtest: health endpoint and generated root/version indices are valid Prism JSON without stale hashes
+ok 23 - health endpoint and generated root/version indices are valid Prism JSON without stale hashes
+  ---
+  duration_ms: 225.50054
+  type: 'test'
+  ...
+# Subtest: CONNECT TLS certificate is valid for the API host and trusted only by this installation CA
+ok 24 - CONNECT TLS certificate is valid for the API host and trusted only by this installation CA
+  ---
+  duration_ms: 76.772814
+  type: 'test'
+  ...
+# Subtest: Qt loopback metadata requests also work in absolute HTTP proxy form
+ok 25 - Qt loopback metadata requests also work in absolute HTTP proxy form
+  ---
+  duration_ms: 4.836159
+  type: 'test'
+  ...
+# Subtest: existing Prism LWJGL 3.3.1 component selection can be served from BMCL without official recipes
+ok 26 - existing Prism LWJGL 3.3.1 component selection can be served from BMCL without official recipes
+  ---
+  duration_ms: 4.045077
+  type: 'test'
+  ...
+# Subtest: Prism CurseForge bulk POST request is converted end to end and credentials are not forwarded
+ok 27 - Prism CurseForge bulk POST request is converted end to end and credentials are not forwarded
+  ---
+  duration_ms: 58.857686
+  type: 'test'
+  ...
+# Subtest: binary downloads stream through MCIM and retain Range/206 semantics
+ok 28 - binary downloads stream through MCIM and retain Range/206 semantics
+  ---
+  duration_ms: 84.319138
+  type: 'test'
+  ...
+# Subtest: missing CurseForge descriptions use a disclosed, HTML-escaped MCIM summary; unrelated 404s remain errors
+ok 29 - missing CurseForge descriptions use a disclosed, HTML-escaped MCIM summary; unrelated 404s remain errors
+  ---
+  duration_ms: 38.074827
+  type: 'test'
+  ...
+# Subtest: HEAD preserves file length and sends no response body
+ok 30 - HEAD preserves file length and sends no response body
+  ---
+  duration_ms: 13.23275
+  type: 'test'
+  ...
+# Subtest: strict mode reports mirror file failures without silently using the original CDN
+ok 31 - strict mode reports mirror file failures without silently using the original CDN
+  ---
+  duration_ms: 8.511705
+  type: 'test'
+  ...
+# Subtest: CONNECT Host mismatch is rejected inside a valid TLS connection
+ok 32 - CONNECT Host mismatch is rejected inside a valid TLS connection
+  ---
+  duration_ms: 6.310359
+  type: 'test'
+  ...
+# Subtest: write requests and invalid metadata/Host paths are rejected
+ok 33 - write requests and invalid metadata/Host paths are rejected
+  ---
+  duration_ms: 9.858216
+  type: 'test'
+  ...
+# Subtest: Microsoft HTTPS remains end-to-end encrypted without bridge certificate substitution
+ok 34 - Microsoft HTTPS remains end-to-end encrypted without bridge certificate substitution
+  ---
+  duration_ms: 191.645095
+  type: 'test'
+  ...
+# Subtest: concurrent identical metadata requests are coalesced and invalid JSON is not cached
+ok 35 - concurrent identical metadata requests are coalesced and invalid JSON is not cached
+  ---
+  duration_ms: 6.034682
+  type: 'test'
+  ...
+# Subtest: temporary mirror HTTP failures retry within the configured limit
+ok 36 - temporary mirror HTTP failures retry within the configured limit
+  ---
+  duration_ms: 4.563405
+  type: 'test'
+  ...
+# Subtest: untrusted interception certificates fail TLS validation
+ok 37 - untrusted interception certificates fail TLS validation
+  ---
+  duration_ms: 4.484677
+  type: 'test'
+  ...
+# Subtest: certificate issuance is limited to configured mirror hosts
+ok 38 - certificate issuance is limited to configured mirror hosts
+  ---
+  duration_ms: 0.577276
+  type: 'test'
+  ...
+# Subtest: long downloads with continuing progress are not aborted by a total-duration timer
+ok 39 - long downloads with continuing progress are not aborted by a total-duration timer
+  ---
+  duration_ms: 2008.110388
+  type: 'test'
+  ...
+# Subtest: connections that never return headers are bounded by a timeout
+ok 40 - connections that never return headers are bounded by a timeout
+  ---
+  duration_ms: 91.296938
+  type: 'test'
+  ...
+# Subtest: a failing BMCL version endpoint can use its mirrored package URL while staying at BMCL
+ok 41 - a failing BMCL version endpoint can use its mirrored package URL while staying at BMCL
+  ---
+  duration_ms: 19.400734
+  type: 'test'
+  ...
+# Subtest: Prism metadata protocol accepts encoded Mojang version IDs containing spaces
+ok 42 - Prism metadata protocol accepts encoded Mojang version IDs containing spaces
+  ---
+  duration_ms: 2.105933
+  type: 'test'
+  ...
+# Subtest: encoded separators, control bytes and nested escapes never become upstream metadata paths
+ok 43 - encoded separators, control bytes and nested escapes never become upstream metadata paths
+  ---
+  duration_ms: 0.791203
+  type: 'test'
+  ...
+1..43
+# tests 43
+# suites 0
+# pass 43
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3608.348828

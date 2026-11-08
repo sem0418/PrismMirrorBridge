@@ -11,6 +11,7 @@ import { Bridge } from '../src/server.mjs';
 import { Transport } from '../src/transport.mjs';
 import { ensureCA, CertificateStore } from '../src/certificates.mjs';
 import { viaProxy } from '../scripts/test-client.mjs';
+import { USER_AGENT } from '../src/version.mjs';
 
 let bridge, upstream, dir, config, upstreamURL, observed = [], raw, failFiles = false, failPrimaryMetadata = false, transient = 0;
 before(async () => {
@@ -90,7 +91,7 @@ test('Prism CurseForge bulk POST request is converted end to end and credentials
   assert.equal(r.status, 200); const v = JSON.parse(r.body); assert.equal(v.data[0].id, 238222); assert(!('sync_at' in v.data[0]));
   const request = observed.findLast(r => r.url === '/curseforge/v1/mods'); assert.deepEqual(JSON.parse(request.body), { modIds: [238222] });
   assert.equal(request.headers['x-api-key'], undefined); assert.equal(request.headers.authorization, undefined); assert.equal(request.headers.cookie, undefined);
-  assert.equal(request.headers['user-agent'], 'PrismMirrorBridge/1.0.0');
+  assert.equal(request.headers['user-agent'], USER_AGENT);
 });
 test('binary downloads stream through MCIM and retain Range/206 semantics', async () => {
   const r = await viaProxy(bridge.port, 'https://cdn.modrinth.com/data/AA/versions/BB/mod.jar', { ca: bridge.ca.cert, headers: { range: 'bytes=2-5' } });
@@ -166,6 +167,7 @@ test('untrusted interception certificates fail TLS validation', async () => {
 test('certificate issuance is limited to configured mirror hosts', () => {
   assert.throws(() => bridge.certs.context('login.microsoftonline.com'), /non-mirror/);
   assert.throws(() => bridge.certs.context('api.modrinth.com.attacker.example'), /non-mirror/);
+  assert.throws(() => bridge.certs.context('dist.creeper.host'), /non-mirror/);
 });
 test('long downloads with continuing progress are not aborted by a total-duration timer', async () => {
   const t = new Transport({ ...config, timeoutMs: 1000, retries: 0 });

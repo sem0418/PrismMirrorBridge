@@ -1,0 +1,13 @@
+{
+  "version": "1.0.2",
+  "userConfirmedUsable": true,
+  "userAuthorizedPublication": true,
+  "userConfirmedArchiveSHA256": "671e72a0b51607668c56df27555e5c57696be06580a60479378eb84093f082da",
+  "productionFilesIdenticalToUserConfirmedArchive": true,
+  "productionFilesCompared": 25,
+  "privateMaterialScanPassed": true,
+  "publicUserMachineTimestampsRemoved": true,
+  "maintainerRealWindowsPrismValidation": "未实机验证",
+  "hostedCI": "pending",
+  "githubVisibilityAtPreparation": "private"
+}

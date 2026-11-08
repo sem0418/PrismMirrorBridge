@@ -1,0 +1,20 @@
+{
+  "version": "1.0.2",
+  "checkedAt": "2026-11-08T09:34:15.277Z",
+  "archiveCRC": true,
+  "allFileSHA256": true,
+  "privateStateExcluded": true,
+  "officialWindowsRuntimeSHA256": true,
+  "extractedOfflineTests": {
+    "passed": 70,
+    "failed": 0
+  },
+  "extractedCLISmoke": true,
+  "validatedCodeSHA256": "73397dccb72ba1a1f1184005e83162658830006b93c5d12e3fe1d59dbe9f94b0",
+  "windowsAndPrismRealMachine": "未实机验证",
+  "officialLinuxPrismControlledTargetMetadataRepro": true,
+  "fullModpackImportTested": false,
+  "githubUploadPaused": true,
+  "passed": true,
+  "verificationNote": "Extracted code and CLI were checked. This report was added afterwards; the final rebuild must retain the same validated code fingerprint and pass CRC and every manifest hash."
+}

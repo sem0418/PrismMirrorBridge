@@ -5,16 +5,26 @@ import tls from 'node:tls';
 import { mkdir, readFile, writeFile, rename } from 'node:fs/promises';
 import { createHash, randomBytes } from 'node:crypto';
 import { join } from 'node:path';
+import { createUnzip, createBrotliDecompress } from 'node:zlib';
+import { pipeline } from 'node:stream/promises';
+import { setTimeout as delay } from 'node:timers/promises';
+import { performance } from 'node:perf_hooks';
+import { USER_AGENT } from './version.mjs';
 
 export class HTTPError extends Error {
   constructor(status, message) { super(message); this.status = status; }
 }
 export class Semaphore {
   constructor(limit) { this.limit = limit; this.active = 0; this.queue = []; }
-  async run(fn) {
-    if (this.active >= this.limit) await new Promise(r => this.queue.push(r));
-    else this.active++;
-    try { return await fn(); } finally { const next = this.queue.shift(); if (next) next(); else this.active--; }
+  async run(fn, { signal } = {}) {
+    signal?.throwIfAborted();
+    if (this.active >= this.limit) await new Promise((resolve, reject) => {
+      const next = () => { signal?.removeEventListener('abort', abort); resolve(); };
+      const abort = () => { const i = this.queue.indexOf(next); if (i >= 0) this.queue.splice(i, 1); reject(signal.reason); };
+      this.queue.push(next); signal?.addEventListener('abort', abort, { once: true });
+    }); else this.active++;
+    try { signal?.throwIfAborted(); return await fn(); }
+    finally { const next = this.queue.shift(); if (next) next(); else this.active--; }
   }
 }
 
@@ -37,15 +47,16 @@ export class Transport {
     this.cacheDir = join(config.dataDir, 'cache');
   }
   close() { this.httpAgent.destroy(); this.httpsAgent.destroy(); }
-  async open(url, { method = 'GET', headers = {}, body, redirects = 0, attempt = 0 } = {}) {
+  async open(url, { method = 'GET', headers = {}, body, redirects = 0, attempt = 0, signal } = {}) {
+    signal?.throwIfAborted();
     const u = new URL(url);
     if (!['http:', 'https:'].includes(u.protocol) || u.username || u.password) throw new HTTPError(400, 'Invalid upstream URL');
-    const h = { 'user-agent': 'PrismMirrorBridge/1.0.0', 'accept-encoding': 'identity', ...headers };
+    const h = { 'user-agent': USER_AGENT, 'accept-encoding': 'identity', ...headers };
     let response;
     try { response = await new Promise((resolve, reject) => {
       let watchdog;
       const req = (u.protocol === 'https:' ? https : http).request(u, {
-        method, headers: h, agent: u.protocol === 'https:' ? this.httpsAgent : this.httpAgent,
+        method, headers: h, signal, agent: u.protocol === 'https:' ? this.httpsAgent : this.httpAgent,
       }, response => { clearTimeout(watchdog); resolve(response); });
       // Bound DNS/connect/headers separately. Once streaming starts, the
       // inactivity timeout below resets on traffic, allowing large modpacks.
@@ -56,18 +67,19 @@ export class Transport {
       if (body) req.write(body);
       req.end();
     }); } catch (error) {
+      if (signal?.aborted) throw signal.reason;
       const retryable = ['ECONNRESET', 'ETIMEDOUT', 'EPIPE', 'ABORT_ERR'].includes(error.code) || error.message === 'Upstream timeout';
       if (!retryable || !['GET', 'HEAD'].includes(method) || attempt >= (this.config.retries || 0)) throw error;
-      await new Promise(resolve => setTimeout(resolve, 500 * 2 ** attempt));
-      return this.open(url, { method, headers, body, redirects, attempt: attempt + 1 });
+      await delay(500 * 2 ** attempt, undefined, { signal });
+      return this.open(url, { method, headers, body, redirects, attempt: attempt + 1, signal });
     }
     if ([429, 500, 502, 503, 504].includes(response.statusCode) && ['GET', 'HEAD'].includes(method) && attempt < (this.config.retries || 0)) {
       const after = response.headers['retry-after'];
-      const delay = after ? (/^\d+$/.test(after) ? Number(after) * 1000 : Date.parse(after) - Date.now()) : 500 * 2 ** attempt;
-      if (Number.isFinite(delay) && delay <= 5000) {
+      const retryDelay = after ? (/^\d+$/.test(after) ? Number(after) * 1000 : Date.parse(after) - Date.now()) : 500 * 2 ** attempt;
+      if (Number.isFinite(retryDelay) && retryDelay <= 5000) {
         response.resume();
-        await new Promise(resolve => setTimeout(resolve, Math.max(0, delay)));
-        return this.open(url, { method, headers, body, redirects, attempt: attempt + 1 });
+        await delay(Math.max(0, retryDelay), undefined, { signal });
+        return this.open(url, { method, headers, body, redirects, attempt: attempt + 1, signal });
       }
     }
     if ([301, 302, 303, 307, 308].includes(response.statusCode) && response.headers.location) {
@@ -81,21 +93,57 @@ export class Transport {
       }
       const nextMethod = response.statusCode === 303 && method !== 'HEAD' ? 'GET' : method;
       if (nextMethod !== method) { delete nextHeaders['content-length']; delete nextHeaders['content-type']; }
-      return this.open(next, { method: nextMethod, headers: nextHeaders, body: nextMethod === method ? body : undefined, redirects: redirects + 1 });
+      return this.open(next, { method: nextMethod, headers: nextHeaders, body: nextMethod === method ? body : undefined, redirects: redirects + 1, signal });
     }
     return response;
   }
-  async bytes(url, { maxBytes = 32 * 1024 * 1024, ...options } = {}) {
-    const r = await this.open(url, options), chunks = []; let size = 0;
-    for await (const c of r) {
-      size += c.length;
-      if (size > maxBytes) { r.destroy(); throw new HTTPError(502, 'Upstream response exceeds limit'); }
-      chunks.push(c);
+  async bytes(url, { maxBytes = 32 * 1024 * 1024, decompress = false, onMetrics, ...options } = {}) {
+    const started = performance.now();
+    if (decompress) options.headers = { ...options.headers, 'accept-encoding': 'gzip' };
+    const r = await this.open(url, options), chunks = []; let size = 0, wireBytes = 0;
+    const headersMs = performance.now() - started;
+    const encoding = (r.headers['content-encoding'] || 'identity').trim().toLowerCase();
+    let decoder;
+    if (decompress && encoding !== 'identity') {
+      if (['gzip', 'deflate'].includes(encoding)) decoder = createUnzip();
+      else if (encoding === 'br') decoder = createBrotliDecompress();
+      else { r.destroy(); throw new HTTPError(502, 'Unsupported API content encoding'); }
+    }
+    r.on('data', c => { wireBytes += c.length; if (wireBytes > maxBytes) r.destroy(new HTTPError(502, 'Upstream response exceeds limit')); });
+    try {
+      await pipeline(r, ...(decoder ? [decoder] : []), async source => {
+        for await (const c of source) {
+          size += c.length;
+          if (size > maxBytes) throw new HTTPError(502, 'Decoded upstream response exceeds limit');
+          chunks.push(c);
+        }
+      }, { signal: options.signal });
+    } catch (error) {
+      if (options.signal?.aborted) throw options.signal.reason;
+      if (decoder && !(error instanceof HTTPError) && /^Z_|^ERR_PADDING|^ERR__/.test(error.code || '')) throw new HTTPError(502, 'MCIM returned invalid compressed JSON');
+      throw error;
     }
     const body = Buffer.concat(chunks);
-    if (r.statusCode >= 400) throw new HTTPError(r.statusCode, `Upstream HTTP ${r.statusCode} from ${new URL(url).hostname}`);
+    onMetrics?.({ wireBytes, decodedBytes: size, contentEncoding: encoding, headersMs: Math.round(headersMs), durationMs: Math.round(performance.now() - started) });
+    if (r.statusCode >= 400) {
+      const error = new HTTPError(r.statusCode, `Upstream HTTP ${r.statusCode} from ${new URL(url).hostname}`);
+      // Internal evidence for MCIM's documented all-missing-ID 404. Never logged
+      // or sent to the client; arbitrary 404s remain failures.
+      if (body.length <= 65536) error.upstreamBody = body;
+      throw error;
+    }
     if (r.statusCode < 200 || r.statusCode >= 300) throw new HTTPError(502, 'Unexpected upstream status');
     return body;
+  }
+  async requestJSON(url, { onMetrics, ...options } = {}) {
+    let metrics;
+    const body = await this.bytes(url, { ...options, decompress: true, onMetrics: value => { metrics = value; } });
+    const start = performance.now(); let value;
+    try { value = JSON.parse(body.toString('utf8')); }
+    catch { throw new HTTPError(502, 'MCIM returned invalid JSON'); }
+    options.signal?.throwIfAborted();
+    onMetrics?.({ ...metrics, parseMs: Math.round((performance.now() - start) * 100) / 100 });
+    return value;
   }
   async cached(url, type = 'json', ttl = this.config.cacheSeconds) {
     const key = createHash('sha256').update(type + ':' + url).digest('hex');

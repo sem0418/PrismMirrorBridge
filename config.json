@@ -11,5 +11,8 @@
   "retries": 2,
   "concurrency": 4,
   "cacheSeconds": 300,
+  "bulkBatchSize": 50,
+  "bulkConcurrency": 3,
+  "bulkTimeoutMs": 45000,
   "dataDir": ".bridge"
 }

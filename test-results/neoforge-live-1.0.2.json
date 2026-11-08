@@ -1,0 +1,41 @@
+{
+  "checkedAt": "2026-11-08T09:15:30.892Z",
+  "bridgeVersion": "1.0.2",
+  "scope": "Real BMCL conversion and loopback HTTP; not a launcher import",
+  "windowsAndPrismRealMachine": "未实机验证",
+  "fullModpackImportTested": false,
+  "component": {
+    "status": 200,
+    "bytes": 36042,
+    "sha256": "b7542fda4c29695219c27cac053947ea85a691044d0fb17690889540e7dd3ce1",
+    "durationMs": 21987,
+    "unchangedFrom101": true
+  },
+  "indexEntry": {
+    "version": "21.1.265",
+    "releaseTime": "1970-01-01T00:00:00+00:00",
+    "type": "release",
+    "recommended": true,
+    "requires": [
+      {
+        "uid": "net.minecraft",
+        "equals": "1.21.1"
+      }
+    ]
+  },
+  "stats": {
+    "requests": 2,
+    "errors": 0,
+    "bmcl": 3,
+    "mcim": 0,
+    "compatibilityRecipes": 0,
+    "fileFallback": 0,
+    "tunnels": 0,
+    "bulkModRequests": 0,
+    "bulkModBatches": 0,
+    "bulkWireBytes": 0,
+    "bulkDecodedBytes": 0,
+    "bulkJSONParseMs": 0
+  },
+  "passed": true
+}

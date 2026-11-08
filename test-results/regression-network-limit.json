@@ -1,0 +1,6 @@
+{
+  "status": "not_completed_due_to_environment_network_policy",
+  "scope": "full file-download regression attempt",
+  "blockedHost": "mediafilez.forgecdn.net",
+  "effect": "This environment could not complete that download; no route or TLS policy was changed. This is not evidence of a launcher-code defect or of a successful download."
+}

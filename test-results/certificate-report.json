@@ -1,5 +1,5 @@
 {
-  "startedAt": "2026-11-08T05:49:52.695Z",
+  "startedAt": "2026-11-08T08:09:09.542Z",
   "checks": [
     {
       "name": "OpenSSL strict X.509 chain and server-auth purpose",
@@ -31,5 +31,5 @@
     }
   ],
   "passed": true,
-  "finishedAt": "2026-11-08T05:49:53.165Z"
+  "finishedAt": "2026-11-08T08:09:11.449Z"
 }

@@ -15,8 +15,15 @@ config.dataDir = dir; config.port = 0; config.compatibilityRecipes = false; conf
 const bridge = await new Bridge(config, { log: message => process.stderr.write(message + '\n') }).start();
 const local = `http://127.0.0.1:${bridge.port}`;
 const report = { startedAt: new Date().toISOString(), node: process.versions.node, tests: [], authenticationLoginTested: false, fullGameLaunchTested: false, windowsTrustTested: false };
+const apiOnly = process.argv.includes('--api-only');
+report.scope = apiOnly ? 'api-only' : process.argv.includes('--quick') ? 'quick' : 'full';
+report.skippedFileChecks = [];
+const fileChecks = new Set(['MCIM CurseForge thumbnail via verified CONNECT TLS', 'MCIM Modrinth JAR download and SHA512/SHA1',
+  'MCIM CurseForge JAR download and SHA1', 'BMCL Windows native JAR and SHA1', 'Prism Linux GLFW compatibility JAR and SHA1',
+  'BMCL asset index and asset content SHA1', 'BMCL Minecraft client JAR download and SHA1']);
 let vanilla, graphics, versions, cfFile;
 async function check(name, fn) {
+  if (apiOnly && fileChecks.has(name)) { report.skippedFileChecks.push(name); console.log('SKIP ' + name + ' (api-only scope)'); return; }
   const start = Date.now();
   try {
     const details = await fn(); report.tests.push({ name, passed: true, durationMs: Date.now() - start, details }); console.log('PASS ' + name + (details ? ' ' + JSON.stringify(details) : ''));

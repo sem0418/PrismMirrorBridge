@@ -1,0 +1,19 @@
+{
+  "version": "1.0.1",
+  "checkedAt": "2026-11-08T08:20:59.011783+00:00",
+  "archiveCRC": true,
+  "allFileSHA256": true,
+  "officialWindowsRuntimeSHA256": true,
+  "privateStateExcluded": true,
+  "extractedOfflineTests": {
+    "passed": 54,
+    "failed": 0
+  },
+  "extractedCLISmoke": true,
+  "sourceAndTestFingerprint": "4a294d1b8b723908866743f93890d900c27b137e408acf95afa15c916099c9d3",
+  "windowsAndPrismRealMachine": "未实机验证",
+  "fullModpackImportTested": false,
+  "githubUploadPaused": true,
+  "passed": true,
+  "verificationNote": "Checked extracted code; this report was then added and the final archive rebuilt with unchanged source/test fingerprint."
+}

@@ -1,0 +1,52 @@
+{
+  "passed": true,
+  "scope": "Linux C++ probe: exact extracted Prism 11.1.1 merge function bodies + unmodified ChecksumValidator header; minimal surrounding scaffolding; not a complete launcher run",
+  "tests": [
+    {
+      "name": "official bytes match exact user expected hash",
+      "passed": true
+    },
+    {
+      "name": "bridge bytes match exact user actual hash",
+      "passed": true
+    },
+    {
+      "name": "unmodified Prism validator rejects bridge bytes with official hash",
+      "passed": true
+    },
+    {
+      "name": "fresh version with hashless bridge row has no checksum expectation",
+      "passed": true
+    },
+    {
+      "name": "hashless bridge row preserves official hash in existing version",
+      "passed": true,
+      "retained": "63d850bb1b842adbccb4753027587b5778215c0ed305bdaca080f52e8799021f"
+    },
+    {
+      "name": "current disk index is hashless while prior official checksum remains active",
+      "passed": true
+    },
+    {
+      "name": "explicit empty string also does not clear old hash",
+      "passed": true
+    },
+    {
+      "name": "three validator resets still reject unchanged converted bytes",
+      "passed": true
+    },
+    {
+      "name": "nonempty converted hash replaces old hash and validates bytes",
+      "passed": true
+    },
+    {
+      "name": "corrected expectation still rejects modified bytes",
+      "passed": true
+    },
+    {
+      "name": "hashless root entry also preserves old package-index hash",
+      "passed": true
+    }
+  ],
+  "windowsAndPrismRealMachine": "未实机验证"
+}

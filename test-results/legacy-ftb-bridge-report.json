@@ -1,0 +1,33 @@
+[
+  {
+    "name": "thirdparty.xml",
+    "status": 200,
+    "bytes": 149197,
+    "durationMs": 4618,
+    "sha256": "42c87c9c2fd00b3cabc5fc252a680cc28434c03e489ec2915b7edd618e3a4a00",
+    "matchesDirectUpstreamBytes": true,
+    "issuer": "openai.com",
+    "bridgeReplacedCertificate": false
+  },
+  {
+    "name": "modpacks.xml",
+    "status": 200,
+    "bytes": 56155,
+    "durationMs": 5253,
+    "sha256": "5a4d0507e94caad11b1088cfc22c38e44c7afeca5797597d5d5262df17dcae72",
+    "matchesDirectUpstreamBytes": true,
+    "issuer": "openai.com",
+    "bridgeReplacedCertificate": false
+  },
+  {
+    "counts": {
+      "requests": 0,
+      "errors": 0,
+      "bmcl": 0,
+      "mcim": 0,
+      "compatibilityRecipes": 0,
+      "fileFallback": 0,
+      "tunnels": 2
+    }
+  }
+]

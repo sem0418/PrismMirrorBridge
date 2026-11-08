@@ -2,9 +2,13 @@
 
 独立运行的 Prism Launcher 镜像转换工具。它在本机提供 Prism 所需的组件元数据，并把指定下载请求转交 BMCLAPI / MCIM。无需重新编译 Prism。
 
-**[下载 Windows x64 便携包](https://github.com/sem0418/PrismMirrorBridge/releases/latest)** · [更新记录](CHANGELOG.md) · [测试报告](TEST_REPORT.md) · [参与开发](CONTRIBUTING.md)
+**当前版本：v1.0.2。用户复测反馈此版本已可用；详细验证范围见测试报告。**
 
-请在 Release 中下载 `PrismMirrorBridge-1.0.0-Windows-x64.zip`。GitHub 的 **Code → Download ZIP** 和自动生成的 **Source code** 只包含源码，需要自行安装 Node.js 24.5+；便携运行时放在 Release 附件中。
+[下载 Windows x64 便携包](https://github.com/sem0418/PrismMirrorBridge/releases/download/v1.0.2/PrismMirrorBridge-1.0.2-Windows-x64.zip) · [版本发布页](https://github.com/sem0418/PrismMirrorBridge/releases/tag/v1.0.2)
+
+[更新记录](CHANGELOG.md) · [测试报告](TEST_REPORT.md) · [参与开发](CONTRIBUTING.md)
+
+请从 Releases 下载 `PrismMirrorBridge-1.0.2-Windows-x64.zip`，其中已包含 Windows 运行时。GitHub 的 **Code → Download ZIP** 和自动生成的 **Source code** 只包含源码，需要自行安装 Node.js 24.5+。
 
 ## Windows 使用
 
@@ -14,6 +18,8 @@
    Windows 可能显示证书安全确认窗口；请核对证书属于本次安装生成的 `Prism Mirror Bridge` CA 后再确认。无人值守 CI 无法代替这一步交互验收。
 4. 运行 `02-start.cmd`，保持窗口打开，然后启动 Prism。
 5. 浏览器打开 <http://127.0.0.1:17643/> 可查看配置地址，<http://127.0.0.1:17643/health> 可查看请求计数。
+
+运行 `04-test.cmd` 前也应完全退出 Prism，测试包含实际进程检测和临时目录中的配置迁移。
 
 建议先新建一个 1.20.1 + Fabric 实例，搜索并下载一个模组，确认本机接入正常后再使用其他实例。现有实例、账号和游戏文件不会被接入脚本删除。
 
@@ -49,7 +55,36 @@
 - CurseForge 完整介绍接口返回 404 时，转换器使用 MCIM 的项目摘要并在正文标明“仅为摘要”。没有摘要、未缓存内容、更新日志及其他不支持的接口仍明确返回错误；不会伪造完整内容或空成功结果。
 - 模组文件默认 `fileFallback: false`：镜像失败会报错；改为 `true` 后才允许在 MCIM 文件失败时尝试原地址，`/health` 会显示回退次数。MCIM 本身也可能返回到其他 CDN 的重定向。
 - Microsoft 登录、Xbox、Minecraft 账号服务等不在解密名单内，代理只转发加密连接。这里验证了透传机制，没有使用真实账号执行登录。
-- 已在隔离 Linux 桌面中运行**官方 Prism 11.1.1**，验证组件解析、Fabric 安装选项和界面内模组下载。另用未修改的 Prism 原始解析代码验证 25 份组件数据。**Windows 信任脚本、真实账号登录及进入游戏仍未实机验收**。详细范围和原始记录见 [TEST_REPORT.md](TEST_REPORT.md)。
+- 已在隔离 Linux 桌面中运行**官方 Prism 11.1.1**，验证组件解析、Fabric 安装选项和界面内模组下载。另用未修改的 Prism 原始解析代码验证 25 份组件数据。**维护环境仍未实机复测普通 Windows 信任对话框、真实账号登录及进入游戏**。用户已反馈 1.0.2 可用；详细范围和原始记录见 [TEST_REPORT.md](TEST_REPORT.md)。
+
+## 从 1.0.0 / 1.0.1 升级
+
+1. 停止旧工具，完全退出所有 Prism 窗口及后台进程。
+2. 将新包解压到新目录，把旧工具的 `config.json` 复制到新工具根目录，覆盖同名文件；再把旧 `.bridge` 文件夹整个复制到新工具根目录。新工具会自动读取它们，沿用原 CA、代理设置和桥接器缓存。不要把这些私有文件上传到仓库或发给别人。
+3. **运行 `05-repair-metadata.cmd`，选择原来的 `prismlauncher.cfg`。** 它复用配置文件旁已有的接入备份，把 Prism 的整个 `meta` 目录移动到同级 `meta.prism-bridge-*` 备份中。包括旧组件、无哈希索引、临时下载文件在内的原文件均保留；实例、账号、模组、游戏资源不改动。此命令不更改证书信任。
+4. 运行 `02-start.cmd`，再重新打开 Prism 重试导入。第一次需要重新取得组件元数据；已下载的模组文件保留。
+
+仅替换工具文件或看到磁盘索引没有 `sha256`，都不能清除运行中的 Prism 已经建立的校验状态。1.0.2 的接入、修复及撤销命令会检查 Prism 是否退出；检测失败时停止，不会关闭或杀死 Prism。标准进程名检查不能识别任意改名的自定义启动器，所以仍须自行完全退出所有副本。
+
+新用户运行 `01-setup.cmd` 时也会执行元数据隔离。重复接入同一已完成迁移的配置不会再次移动正常缓存；手动修复命令则明确重新隔离当前 `meta`。`03-undo.cmd` 隔离桥接器缓存后恢复原网络设置：1.0.2 首次接入时保存的原始快照可自动放回；1.0.0/1.0.1 升级时捕获的混合缓存只保留备份，原源使用新缓存。中断后先保持 Prism 关闭，再重跑原命令；出现目录冲突时停止并保留全部备份，不覆盖任一副本。
+
+NeoForge 校验状态的证据、修复和验证边界见 [诊断及修复报告](docs/NEOFORGE_CHECKSUM_DIAGNOSIS.md)。**维护环境中的真实 Windows + Prism 的 ATM10 8.5 导入仍未实机验证；用户已反馈此版本可用。**
+
+## 完全重装
+
+也可以不迁移旧工具的文件：先完全退出 Prism 和旧工具，在旧工具目录运行 `03-undo.cmd`，选择原来的 `prismlauncher.cfg` 撤销接入；然后删除旧工具目录，保留 Prism 数据目录。把新包完整解压，运行 `01-setup.cmd` 重新接入并确认本次生成的新证书，再运行 `02-start.cmd` 和 Prism。
+
+全新接入已经包含元数据隔离，不需要再运行 `05-repair-metadata.cmd`。手动配置过的上游代理需要重新填写。删除工具目录本身不会撤销 Prism 的代理设置，也不会移除旧 CA，所以先撤销再删除。
+
+## LegacyFTB 与大型整合包
+
+- LegacyFTB 的 `dist.creeper.host` 仍做加密 CONNECT 透传。本轮两个 XML 端点均实测返回 200、有效 XML，经过本工具的字节一致。若本机直连也在 TLS 前被重置，本工具的默认透传不会自动改变网络路径。
+- 需要额外网络代理时，在本工具的 `config.json` 中把 `upstreamProxy` 配成**另一个可用的 HTTP 代理**，如 `http://127.0.0.1:7890`。不要填本工具的 `17643` 端口，也不要直接填 SOCKS5 地址。Windows 的“系统代理”开关不保证提供 Node 所读取的 `HTTP_PROXY` / `HTTPS_PROXY` 环境变量。
+- 1.0.1 针对 CurseForge `POST /v1/mods` 协商 gzip、按 50 个 ID 分批，最多 3 批并发；等全部必要批次完成后再返回完整 JSON。`/v1/mods/files` 保持独立的一次文件查询。任一必要批次失败会报错，整体超过 45 秒默认预算会返回 504，不返回部分成功。
+- 缺失 ID 保持缺失；重复 ID 只出现一次。仅识别 MCIM 明确的“该批 ID 全部不存在”404，普通 404、503、无效 JSON 或超时仍使整次查询失败。
+- `/health` 的 `bulkModBatches`、`bulkWireBytes`、`bulkDecodedBytes`、`bulkJSONParseMs` 可用于查看项目查询的批数和成功读取批次的传输/解析开销。预算按 Prism 单次请求约 60 秒设计；手动降低 Prism 超时后也应相应降低工具预算，实际成功速度仍受网络和镜像状态影响。
+
+All the Mods 10 8.5 的真实 498-ID 接口复测约 22.3 秒完成，**维护环境中的真实 Windows + Prism 整合包导入未实机验证**。两个问题的证据、错误语义和剩余验证事项见 [修复报告](docs/NETWORK_FIXES_1.0.1.md)。
 
 ## 配置
 
@@ -67,6 +102,9 @@
 | `timeoutMs` | `30000` | 建连/响应头及传输无进展超时；有持续流量的大文件允许超过此总时长 |
 | `retries` | `2` | GET/HEAD 遇到临时失败时的额外重试次数；尊重短期 Retry-After，长等待则直接报告错误 |
 | `cacheSeconds` | `300` | 成功元数据的缓存有效期 |
+| `bulkBatchSize` | `50` | CurseForge `POST /v1/mods` 每批项目数，可设 10–100 |
+| `bulkConcurrency` | `3` | 每次项目查询最多并发批数，可设 1–3；同时受全局并发限制 |
+| `bulkTimeoutMs` | `45000` | 项目批量查询的整体预算，包含排队、传输和解析；可设 1000–50000 毫秒 |
 
 如果原 Prism 使用了单独的代理，请把它的 HTTP 代理地址填到 `upstreamProxy`；不要填本工具自己的端口。不支持将 SOCKS5 地址直接作为上游代理。环境变量中的代理地址也不能指回本工具。
 
@@ -103,6 +141,7 @@ node cli.mjs doctor
 npm test
 node scripts/live-test.mjs          # 会下载约几十 MB 的真实文件
 node scripts/live-test.mjs --quick  # 跳过较大的 Minecraft 客户端 JAR
+node scripts/bulk-live-test.mjs    # 真实 ATM10 8.5 两阶段 API 检查，不下载整合包模组
 node cli.mjs restore --prism-config "你的数据目录/prismlauncher.cfg"
 node cli.mjs untrust-ca             # 仅 Windows
 ```
@@ -124,14 +163,14 @@ node scripts/native-validation.mjs --probe /tmp/prism-probe
 
 ```sh
 python scripts/build-release.py
-python scripts/check-release.py dist/PrismMirrorBridge-1.0.0-Windows-x64.zip
+python scripts/check-release.py dist/PrismMirrorBridge-1.0.2-Windows-x64.zip
 ```
 
 可通过 `--node-exe /path/to/official/node.exe` 复用同一版本的官方文件，仍会校验 SHA256。`SOURCE_DATE_EPOCH` 可固定 ZIP 时间戳。源码不提交运行时二进制；发布包内包含对应第三方许可和完整工具源码。
 
 ## MCIM 接入规则
 
-本工具统一使用 `PrismMirrorBridge/1.0.0`，限制并发并缓存元数据。MCIM 文档要求接入前登记名称和 User-Agent，并禁止对其端点进行服务套壳。此项目仅作为本机 Prism 转接客户端交付；维护者在正式长期接入、公开分发或部署前，应向 MCIM 确认这种接入方式并完成登记。本次没有提交外部登记评论。
+本工具统一使用 `PrismMirrorBridge/1.0.2`，限制并发并缓存元数据。MCIM 文档要求接入前登记名称和 User-Agent，并禁止对其端点进行服务套壳。此项目仅作为本机 Prism 转接客户端交付；维护者在正式长期接入、公开分发或部署前，应向 MCIM 确认这种接入方式并完成登记。本次没有提交外部登记评论。
 
 - [MCIM 当前接入指南](https://www.mcimirror.top/guide/start/getting-started)
 - [MCIM 登记要求](https://www.mcimirror.top/guide/rules/register)
