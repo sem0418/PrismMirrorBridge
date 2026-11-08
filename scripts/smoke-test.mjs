@@ -1,5 +1,5 @@
-// Isolated CLI lifecycle check. On Windows, also exercises setup/undo with an
-// explicit test config path and removes the temporary current-user CA afterwards.
+// Isolated CLI lifecycle check. --windows-trust opts into the interactive
+// Windows security dialog and removes the temporary current-user CA afterwards.
 import { mkdtemp, cp, writeFile, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join, dirname, resolve } from 'node:path';
@@ -48,7 +48,7 @@ try {
   run(['doctor']); const index = await (await fetch(`http://127.0.0.1:${port}/meta/v1/index.json`)).json(); assert(index.packages.some(p => p.uid === 'net.minecraft'));
   console.log('PASS CLI init/serve/doctor and component root index');
   await new Promise(done => { service.once('exit', done); service.kill(); }); service = null;
-  if (process.platform === 'win32') {
+  if (process.platform === 'win32' && process.argv.includes('--windows-trust')) {
     const cert = new X509Certificate(await readFile(join(app, '.bridge/ca/ca.pem')));
     const thumbprint = cert.fingerprint.replaceAll(':', '');
     // Mark before setup so finally removes trust even if setup is interrupted.
@@ -58,9 +58,11 @@ try {
     assert.notEqual(spawnSync('certutil.exe', ['-user', '-store', 'Root', thumbprint], { encoding: 'utf8', timeout: 10000 }).status, 0);
     assert((await readFile(prism, 'utf8')).includes('ProxyType=None'));
     console.log('PASS Windows setup/undo batch scripts and current-user certutil trust/untrust');
+  } else if (process.platform === 'win32') {
+    console.log('SKIP Windows CA store setup/undo: interactive security confirmation; opt in with --windows-trust on a desktop');
   }
 } finally {
   if (service) { await new Promise(done => { if (service.exitCode !== null) return done(); service.once('exit', done); service.kill(); }); }
   if (trusted) spawnSync(process.execPath, [join(app, 'cli.mjs'), 'untrust-ca'], { encoding: 'utf8', timeout: 10000 });
-  await rm(temporary, { recursive: true, force: true });
+  await rm(temporary, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
 }
