@@ -2,6 +2,7 @@ name: Windows cold-start diagnostics
 on:
   push:
     branches: [diagnostics/windows-cold-start-501]
+    paths-ignore: ['**/*.md', 'test-results/**']
   workflow_dispatch:
 permissions:
   contents: read

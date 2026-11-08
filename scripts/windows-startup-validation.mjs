@@ -94,9 +94,10 @@ try {
   // Probes above must not warm either the Java or Minecraft cache used by the
   // actual launcher startup below.
   await bridge.close();
-  bridge = await new Bridge({ ...cfg, dataDir: join(temporary, 'fresh-ui-bridge') }, { log: line => console.log(line) }).start();
+  bridge = await new Bridge({ ...cfg, ...(fixed ? { retries: 2, timeoutMs: 30000 } : {}), dataDir: join(temporary, 'fresh-ui-bridge') }, { log: line => console.log(line) }).start();
   observed.length = 0; trackRequests(bridge);
   report.launcherBridgeCacheInitiallyEmpty = true;
+  report.launcherBridgeUsesDefaultRetryAndTimeout = fixed;
   if (fixed) {
     testTrust(true); trusted = true;
     report.windowsTestCAStore = 'LocalMachine Root on disposable elevated CI runner';

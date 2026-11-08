@@ -32,9 +32,12 @@ export class Bridge {
   constructor(config, { transport, log = console.log } = {}) {
     this.config = config; this.log = log; this.t = transport || new Transport(config);
     this.stats = { requests: 0, errors: 0, bmcl: 0, mcim: 0, compatibilityRecipes: 0, fileFallback: 0, tunnels: 0,
+      javaFileRequests: 0, javaFileDownloads: 0, javaFileCacheHits: 0,
       bulkModRequests: 0, bulkModBatches: 0, bulkWireBytes: 0, bulkDecodedBytes: 0, bulkJSONParseMs: 0 };
     this.meta = new MetadataService(config, this.t, source => {
       if (source === 'bmcl') this.stats.bmcl++; else if (source === 'prism-compatibility') this.stats.compatibilityRecipes++;
+      else if (source === 'java-file-download') this.stats.javaFileDownloads++;
+      else if (source === 'java-file-cache-hit') this.stats.javaFileCacheHits++;
     });
     this.ca = ensureCA(join(config.dataDir, 'ca'));
     this.certs = new CertificateStore(this.ca, INTERCEPT_HOSTS);
@@ -108,6 +111,15 @@ export class Bridge {
     if (url.hostname === 'meta.prismlauncher.org' && url.pathname.startsWith('/v1/')) {
       if (!['GET', 'HEAD'].includes(req.method)) throw new HTTPError(405, 'Metadata is read-only');
       return jsonResponse(res, await this.meta.request(url.pathname.slice(4)), 200, req.method === 'HEAD', 'bmcl-converter');
+    }
+    const javaFile = req.method === 'GET' && !req.headers.range && !req.headers['if-none-match'] && !req.headers['if-modified-since']
+      && this.meta.javaFiles.lookup(url.href);
+    if (javaFile) {
+      this.stats.javaFileRequests++;
+      const bytes = await this.meta.javaFiles.bytes(javaFile);
+      res.writeHead(200, { 'content-type': 'application/octet-stream', 'content-length': bytes.length, 'cache-control': 'no-store',
+        'x-prism-bridge-source': 'bmcl-java-file', 'x-content-type-options': 'nosniff' });
+      return res.end(bytes);
     }
     const target = mirrorURL(url.href, this.config), modAPI = MOD_API_HOSTS.has(url.hostname);
     if (modAPI) {

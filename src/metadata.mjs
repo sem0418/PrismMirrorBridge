@@ -6,6 +6,7 @@ import { convertWindowsJava, restoreJavaManifest, JAVA_MANIFEST_PATH } from './j
 import { readFile, mkdir, writeFile, rename } from 'node:fs/promises';
 import { join } from 'node:path';
 import { createHash, randomBytes } from 'node:crypto';
+import { JavaFileCache } from './java-file-cache.mjs';
 
 export const PACKAGES = {
   'net.minecraft': 'Minecraft', 'org.lwjgl': 'LWJGL 2', 'org.lwjgl3': 'LWJGL 3',
@@ -40,6 +41,7 @@ export class MetadataService {
     this.config = config; this.t = transport; this.onSource = onSource;
     this.memoized = new Map();
     this.javaPending = new Map();
+    this.javaFiles = new JavaFileCache(config, transport, onSource);
     this.graphicsAliases = new Map(Object.entries(LWJGL_SOURCES).flatMap(([uid, entries]) => Object.entries(entries).map(([version, source]) => [uid + ':' + version, source])));
   }
   async memo(key, fn) {
@@ -100,12 +102,14 @@ export class MetadataService {
         const bytes = await readFile(path);
         if (bytes.length > 2 * 1024 * 1024 || createHash('sha1').update(bytes).digest('hex') !== hash)
           throw new HTTPError(502, 'Cached Java runtime manifest failed integrity verification');
+        this.javaFiles.registerVerifiedManifest(bytes);
         return bytes;
       } catch (error) { if (error.code !== 'ENOENT') throw error; }
       if (!source) throw new HTTPError(404, 'Unknown Java runtime manifest');
       if (source.sha1 !== hash || !Number.isSafeInteger(source.size) || source.size <= 0 || source.size > 2 * 1024 * 1024)
         throw new HTTPError(502, 'Invalid Java runtime manifest reference');
       const bytes = restoreJavaManifest(await this.t.limit.run(() => this.t.bytes(source.url, { maxBytes: 2 * 1024 * 1024 })), source);
+      this.javaFiles.registerVerifiedManifest(bytes);
       await mkdir(directory, { recursive: true });
       const temporary = path + '.' + randomBytes(6).toString('hex');
       await writeFile(temporary, bytes, { mode: 0o600 }); await rename(temporary, path);

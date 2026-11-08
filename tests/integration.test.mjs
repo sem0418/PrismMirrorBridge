@@ -16,7 +16,8 @@ import { JAVA_MANIFEST_PATH } from '../src/java-runtime.mjs';
 import { createHash } from 'node:crypto';
 
 let bridge, upstream, dir, config, upstreamURL, observed = [], raw, failFiles = false, failPrimaryMetadata = false, transient = 0;
-const javaManifest = Buffer.from('{"files":{"bin/java.exe":{"type":"file","downloads":{"raw":{"url":"https://piston-data.mojang.com/v1/objects/' + 'b'.repeat(40) + '/java.exe","sha1":"' + 'b'.repeat(40) + '","size":4}},"executable":true}}}');
+const javaBytes = Buffer.from('java'), javaFileHash = createHash('sha1').update(javaBytes).digest('hex');
+const javaManifest = Buffer.from('{"files":{"bin/java.exe":{"type":"file","downloads":{"raw":{"url":"https://piston-data.mojang.com/v1/objects/' + javaFileHash + '/java.exe","sha1":"' + javaFileHash + '","size":4}},"executable":true}}}');
 const javaManifestHash = createHash('sha1').update(javaManifest).digest('hex');
 before(async () => {
   dir = mkdtempSync(join(tmpdir(), 'prism-bridge-test-'));
@@ -29,6 +30,10 @@ before(async () => {
       manifest: { url: 'https://piston-meta.mojang.com/v1/packages/' + javaManifestHash + '/manifest.json', sha1: javaManifestHash, size: javaManifest.length },
     }] } }));
     if (req.url === '/v1/packages/' + javaManifestHash + '/manifest.json') return res.end(javaManifest);
+    if (req.url === '/v1/objects/' + javaFileHash + '/java.exe') {
+      if (req.headers.range) { res.writeHead(206, { 'content-range': 'bytes 0-1/4', 'content-length': 2 }); return res.end(javaBytes.subarray(0, 2)); }
+      res.setHeader('content-length', 4); return setTimeout(() => res.end(javaBytes), 50);
+    }
     if (req.url.startsWith('/mc/game/')) { res.setHeader('content-type', 'application/json'); return res.end(JSON.stringify({ latest: { release: '1.20.1' }, versions: [{ id: '1.20.1', type: 'release', releaseTime: raw.releaseTime, url: 'https://piston-meta.mojang.com/v1/packages/test/1.20.1.json' }] })); }
     if (req.url === '/version/1.20.1/json') {
       if (failPrimaryMetadata) { res.writeHead(503); return res.end('busy'); }
@@ -101,6 +106,19 @@ test('fresh Java metadata succeeds with compatibility disabled and proxied runti
   const forwarded = observed.findLast(r => r.url === '/v1/packages/' + javaManifestHash + '/manifest.json');
   assert.equal(forwarded.headers.authorization, undefined); assert.equal(forwarded.headers.cookie, undefined); assert.equal(forwarded.headers['x-api-key'], undefined);
   assert.equal(bridge.stats.compatibilityRecipes, 0);
+});
+test('69 simultaneous downloads of one verified Java object make one mirror request and preserve Range and HEAD semantics', async () => {
+  const url = 'https://piston-data.mojang.com/v1/objects/' + javaFileHash + '/java.exe';
+  const responses = await Promise.all(Array.from({ length: 69 }, () => viaProxy(bridge.port, url, { ca: bridge.ca.cert,
+    headers: { authorization: 'not-for-mirror', cookie: 'not-for-mirror' } })));
+  for (const r of responses) { assert.equal(r.status, 200); assert.deepEqual(r.body, javaBytes); }
+  const calls = observed.filter(r => r.url === '/v1/objects/' + javaFileHash + '/java.exe');
+  assert.equal(calls.length, 1); assert.equal(calls[0].headers.authorization, undefined); assert.equal(calls[0].headers.cookie, undefined);
+  assert.equal(bridge.stats.javaFileDownloads, 1); assert.equal(bridge.stats.javaFileCacheHits, 68);
+  const ranged = await viaProxy(bridge.port, url, { ca: bridge.ca.cert, headers: { range: 'bytes=0-1' } });
+  assert.equal(ranged.status, 206); assert.equal(ranged.body.toString(), 'ja'); assert.equal(ranged.headers['content-range'], 'bytes 0-1/4');
+  const head = await viaProxy(bridge.port, url, { ca: bridge.ca.cert, method: 'HEAD' });
+  assert.equal(head.status, 200); assert.equal(head.headers['content-length'], '4'); assert.equal(head.body.length, 0);
 });
 test('Qt loopback metadata requests also work in absolute HTTP proxy form', async () => {
   const r = await new Promise((resolve, reject) => {
