@@ -1,0 +1,15 @@
+{
+  "runId": 42457969488,
+  "url": "https://github.com/sem0418/PrismMirrorBridge/actions/runs/42457969488",
+  "sourceCommit": "5884d207db7de76d75effe8ad1d112907159efb1",
+  "offlineTests": {
+    "windows": 43,
+    "linux": 43,
+    "macos": 43
+  },
+  "linuxAndMacOSCLISmokePassed": true,
+  "windowsCLILifecyclePassed": true,
+  "windowsInteractiveTrustCompleted": false,
+  "failure": "Windows unattended certificate-store import remained interactive, timed out, and left a locked temporary directory during cleanup.",
+  "followup": "Keep the normal security confirmation; make CA-store test explicitly opt-in on a Windows desktop. Hosted CI tests CLI lifecycle without changing the trust store."
+}
