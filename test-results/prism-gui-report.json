@@ -1,0 +1,91 @@
+{
+  "checkedAt": "2026-11-08T06:11:24.004958+00:00",
+  "platform": "Linux x86_64 / isolated Xvfb",
+  "officialPrismVersion": "11.1.1",
+  "prismBinaryModified": false,
+  "officialAppImageSHA256": "bb81038c56a09e944659e4b808dbfbc52d52d5e3a3ffe32216689a3ca1508d3d",
+  "qtVersion": "6.10.2 bundled with official AppImage",
+  "caProvisioning": "Isolated Qt startup helper adds only the installation CA using QSslConfiguration; normal TLS hostname/chain validation stays enabled. This is test-only and does not validate Windows trust scripts.",
+  "initialInstanceSetup": "Prepared a minimal Minecraft 1.20.1 instance in an isolated data directory, then used the real Prism Version and Mods pages.",
+  "acceptedComponents": [
+    {
+      "uid": "net.minecraft",
+      "version": "1.20.1"
+    },
+    {
+      "uid": "org.lwjgl3",
+      "version": "bridge-1.20.1"
+    },
+    {
+      "uid": "net.fabricmc.fabric-loader",
+      "version": "0.20.1"
+    },
+    {
+      "uid": "net.fabricmc.intermediary",
+      "version": "1.20.1"
+    }
+  ],
+  "fabricSelectionThroughGUI": true,
+  "freshMetadataReloadWithFinalBridge": true,
+  "linuxGLFWCompatibilityPatchObservedInPrismCache": true,
+  "modrinthSearchDetailsVersionsAndDownload": true,
+  "curseforgeSearchSummaryVersionsDependencyReviewAndDownload": true,
+  "curseforgeDescriptionIssue": "Initial full description request returned MCIM 404; final adapter rendered the actual MCIM project summary with an explicit summary-only notice. Retest had no HTTP errors.",
+  "downloadedFiles": [
+    {
+      "filename": "fabric-api-0.92.12+1.20.1.jar",
+      "provider": "curseforge",
+      "bytes": 2137232,
+      "sha1": "3e9cdd3e2f827ca9a259df9eb8e31949437b6bd4",
+      "expectedSHA1": "3e9cdd3e2f827ca9a259df9eb8e31949437b6bd4",
+      "hashMatched": true,
+      "downloadedByOfficialPrismGUI": true
+    },
+    {
+      "filename": "jei-1.20.1-fabric-15.74.0.234.jar",
+      "provider": "curseforge",
+      "bytes": 4865333,
+      "sha1": "7b971a4a1b529d5d2390ceb6eaa3255cd63cd62c",
+      "expectedSHA1": "7b971a4a1b529d5d2390ceb6eaa3255cd63cd62c",
+      "hashMatched": true,
+      "downloadedByOfficialPrismGUI": true
+    },
+    {
+      "filename": "mezz_config-1.20.1-fabric-0.6.11.jar",
+      "provider": "curseforge",
+      "bytes": 388759,
+      "sha1": "11008d72e652faa4fc1c0740ada7f385ffe3f26d",
+      "expectedSHA1": "11008d72e652faa4fc1c0740ada7f385ffe3f26d",
+      "hashMatched": true,
+      "downloadedByOfficialPrismGUI": true
+    },
+    {
+      "filename": "sodium-fabric-0.5.13+mc1.20.1.jar",
+      "provider": "modrinth",
+      "bytes": 971552,
+      "sha1": "bcdbf37d9494e405cba210d7a80ed58e756297b5",
+      "expectedSHA1": "bcdbf37d9494e405cba210d7a80ed58e756297b5",
+      "hashMatched": true,
+      "downloadedByOfficialPrismGUI": true
+    }
+  ],
+  "finalBridgeCounts": {
+    "requests": 29,
+    "errors": 0,
+    "bmcl": 10,
+    "mcim": 15,
+    "compatibilityRecipes": 0,
+    "fileFallback": 0,
+    "tunnels": 1
+  },
+  "windowsTrustTested": false,
+  "realAccountLoginTested": false,
+  "fullGameInstallTested": false,
+  "fullGameLaunchTested": false,
+  "passed": true,
+  "fullGameInstallGate": {
+    "observed": true,
+    "message": "Cannot download Minecraft or update instances unless you have at least one account added. Please add a Microsoft account.",
+    "gateBypassed": false
+  }
+}

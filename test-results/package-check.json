@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-11-08T06:14:36.808392+00:00",
+  "archiveCRC": true,
+  "noPrivateState": true,
+  "fileManifest": true,
+  "offlineTests": {
+    "passed": 43,
+    "failed": 0,
+    "extractedArchive": true,
+    "record": "test-results/package-unit.tap"
+  },
+  "upstreamParserCasesFromExtractedArchive": 25,
+  "opensslChecksFromExtractedArchive": 7,
+  "cliInit": true,
+  "cliServeHealth": true,
+  "cliDoctor": true,
+  "rootComponentIndex": true,
+  "configureRestore": true,
+  "windowsRuntimeSHA256MatchedOfficialDistribution": true,
+  "windowsRuntimeExecuted": false,
+  "nativePrismGameLaunchTested": false,
+  "passed": true
+}

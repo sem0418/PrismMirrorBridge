@@ -1,0 +1,35 @@
+{
+  "startedAt": "2026-11-08T05:49:52.695Z",
+  "checks": [
+    {
+      "name": "OpenSSL strict X.509 chain and server-auth purpose",
+      "passed": true
+    },
+    {
+      "name": "Wrong hostname rejected",
+      "passed": true
+    },
+    {
+      "name": "Unrelated root CA rejected",
+      "passed": true
+    },
+    {
+      "name": "root uses RFC 5280 UTCTime for dates before 2050",
+      "passed": true
+    },
+    {
+      "name": "root includes subject and authority key identifiers",
+      "passed": true
+    },
+    {
+      "name": "leaf uses RFC 5280 UTCTime for dates before 2050",
+      "passed": true
+    },
+    {
+      "name": "leaf includes subject and authority key identifiers",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-08T05:49:53.165Z"
+}
