@@ -1,0 +1,28 @@
+name: 问题反馈
+description: 报告转换或连接问题
+body:
+  - type: markdown
+    attributes:
+      value: 请勿上传账号目录、CA 私钥、配置备份或包含令牌的日志。
+  - type: input
+    id: versions
+    attributes:
+      label: 系统、Prism 和工具版本
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤、游戏/加载器/模组版本
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期结果与实际结果
+    validations:
+      required: true
+  - type: textarea
+    id: errors
+    attributes:
+      label: 已去除私密信息的错误码和日志
