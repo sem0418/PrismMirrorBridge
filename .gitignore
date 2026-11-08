@@ -1,0 +1,13 @@
+.bridge/
+runtime/node.exe
+dist/
+node_modules/
+*.log
+*.bridge-backup.json
+*.bridge-backup.json.restored-*
+*.pem
+*.key
+*.p12
+*.o
+*.so
+__pycache__/

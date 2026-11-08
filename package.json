@@ -1,0 +1,19 @@
+{
+  "name": "prism-mirror-bridge",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Standalone BMCLAPI to Prism metadata converter and selective MCIM proxy",
+  "license": "GPL-3.0-only",
+  "repository": { "type": "git", "url": "https://github.com/sem0418/PrismMirrorBridge.git" },
+  "bugs": { "url": "https://github.com/sem0418/PrismMirrorBridge/issues" },
+  "homepage": "https://github.com/sem0418/PrismMirrorBridge#readme",
+  "engines": { "node": ">=24.5.0" },
+  "scripts": {
+    "start": "node cli.mjs serve",
+    "test": "node scripts/test.mjs",
+    "test:smoke": "node scripts/smoke-test.mjs",
+    "test:live": "node scripts/live-test.mjs",
+    "doctor": "node cli.mjs doctor"
+  }
+}

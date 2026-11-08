@@ -1,0 +1,15 @@
+{
+  "listen": "127.0.0.1",
+  "port": 17643,
+  "bmcl": "https://bmclapi2.bangbang93.com",
+  "mcim": "https://mod.mcimirror.top",
+  "prismRecipes": "https://meta.prismlauncher.org/v1/",
+  "compatibilityRecipes": false,
+  "fileFallback": false,
+  "upstreamProxy": "environment",
+  "timeoutMs": 30000,
+  "retries": 2,
+  "concurrency": 4,
+  "cacheSeconds": 300,
+  "dataDir": ".bridge"
+}
