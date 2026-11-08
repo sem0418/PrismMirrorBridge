@@ -13,7 +13,7 @@ while ((Get-Date) -lt $until) {
       [System.Windows.Automation.AutomationElement]::ProcessIdProperty, $PrismProcessId)))
   foreach ($window in $windows) {
     try {
-      $title = $window.Current.Name
+      $title = $window.Current.Name -replace ' - Prism Launcher .*$', ''
       $buttons = $window.FindAll([System.Windows.Automation.TreeScope]::Descendants,
         (New-Object System.Windows.Automation.PropertyCondition(
           [System.Windows.Automation.AutomationElement]::ControlTypeProperty,
