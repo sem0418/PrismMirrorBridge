@@ -1,0 +1,69 @@
+{
+  "runId": 42458302204,
+  "url": "https://github.com/sem0418/PrismMirrorBridge/actions/runs/42458302204",
+  "sourceCommit": "e97bb869215d2a83c5157fa3ceb1290021771898",
+  "nodeVersion": "24.22.2",
+  "jobs": [
+    {
+      "name": "Node 24 / ubuntu-latest",
+      "conclusion": "success",
+      "url": "https://github.com/sem0418/PrismMirrorBridge/actions/runs/42458302204/job/128661943445",
+      "steps": [
+        {
+          "name": "Offline conversion and transport tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "CLI lifecycle without trust-store changes",
+          "conclusion": "success"
+        },
+        {
+          "name": "Strict X.509 conformance",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "name": "Node 24 / macos-latest",
+      "conclusion": "success",
+      "url": "https://github.com/sem0418/PrismMirrorBridge/actions/runs/42458302204/job/128661943578",
+      "steps": [
+        {
+          "name": "Offline conversion and transport tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "CLI lifecycle without trust-store changes",
+          "conclusion": "success"
+        },
+        {
+          "name": "Strict X.509 conformance",
+          "conclusion": "skipped"
+        }
+      ]
+    },
+    {
+      "name": "Node 24 / windows-latest",
+      "conclusion": "success",
+      "url": "https://github.com/sem0418/PrismMirrorBridge/actions/runs/42458302204/job/128661943642",
+      "steps": [
+        {
+          "name": "Offline conversion and transport tests",
+          "conclusion": "success"
+        },
+        {
+          "name": "CLI lifecycle without trust-store changes",
+          "conclusion": "success"
+        },
+        {
+          "name": "Strict X.509 conformance",
+          "conclusion": "skipped"
+        }
+      ]
+    }
+  ],
+  "windowsCAStoreInteractiveTested": false,
+  "realMicrosoftLoginTested": false,
+  "fullGameLaunchTested": false,
+  "passed": true
+}
