@@ -36,12 +36,15 @@ let prism, ui, trusted = false;
 const hash = data => createHash('sha256').update(data).digest('hex');
 function testTrust(add) {
   const result = spawnSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command',
+    '$ErrorActionPreference="Stop";' +
+    '$principal=[System.Security.Principal.WindowsPrincipal]::new([System.Security.Principal.WindowsIdentity]::GetCurrent());' +
+    'if(-not $principal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)){throw "Disposable test runner is not elevated"};' +
     '$cert=[System.Security.Cryptography.X509Certificates.X509Certificate2]::new($env:BRIDGE_PROBE_CA);' +
     'if($cert.Subject -notlike "*Prism Mirror Bridge*"){throw "Unexpected test CA"};' +
-    '$store=[System.Security.Cryptography.X509Certificates.X509Store]::new("Root","CurrentUser");' +
+    '$store=[System.Security.Cryptography.X509Certificates.X509Store]::new("Root","LocalMachine");' +
     '$store.Open("ReadWrite");try{$store.' + (add ? 'Add' : 'Remove') + '($cert)}finally{$store.Close()}'],
     { env: { ...process.env, BRIDGE_PROBE_CA: bridge.ca.certPath }, encoding: 'utf8', timeout: 15000 });
-  assert.equal(result.status, 0, 'Isolated Windows current-user test certificate operation: ' + result.stdout + result.stderr);
+  assert.equal(result.status, 0, 'Isolated disposable Windows runner test certificate operation: ' + result.stdout + result.stderr);
 }
 async function probe(path, status) {
   const response = await fetch(`http://127.0.0.1:${bridge.port}/meta/v1/${path}`, { signal: AbortSignal.timeout(45000) });
@@ -94,7 +97,11 @@ try {
   bridge = await new Bridge({ ...cfg, dataDir: join(temporary, 'fresh-ui-bridge') }, { log: line => console.log(line) }).start();
   observed.length = 0; trackRequests(bridge);
   report.launcherBridgeCacheInitiallyEmpty = true;
-  if (fixed) { testTrust(true); trusted = true; report.windowsCurrentUserTestCA = true; }
+  if (fixed) {
+    testTrust(true); trusted = true;
+    report.windowsTestCAStore = 'LocalMachine Root on disposable elevated CI runner';
+    report.interactiveCurrentUserSetupTested = false;
+  }
   const data = join(temporary, 'Fresh Prism Data');
   const instance = join(data, 'instances', 'ColdStart501');
   await mkdir(instance, { recursive: true });
@@ -172,7 +179,7 @@ try {
     spawnSync('taskkill.exe', ['/PID', String(child.pid), '/T', '/F'], { timeout: 10000, stdio: 'ignore' });
   if (trusted) {
     try { testTrust(false); report.windowsTestCARemoved = true; }
-    catch (error) { report.windowsTestCARemoved = false; report.cleanupFailure = error.message; process.exitCode = 1; }
+    catch (error) { report.windowsTestCARemoved = false; report.cleanupFailure = error.message; report.diagnosticPassed = false; process.exitCode = 1; }
   }
   await bridge.close();
   await writeFile(join(root, 'test-results/windows-cold-start-501.json'), JSON.stringify(report, null, 2) + '\n');
