@@ -1,0 +1,23 @@
+name: Windows cold-start diagnostics
+on:
+  push:
+    branches: [diagnostics/windows-cold-start-501]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  startup:
+    name: Official Prism 11.1.1 on fresh Windows x64
+    runs-on: windows-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: 24.22.2
+      - name: Existing Windows regression tests
+        run: npm test
+      - name: Probe first-run requests with official Prism
+        run: node scripts/windows-startup-validation.mjs
