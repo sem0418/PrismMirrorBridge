@@ -1,0 +1,22 @@
+{
+  "scope": "Official Prism 11.1.1 Linux demo; empty initial test data, budgeted interruption then resumed only this experiment; preinstalled Java 21.0.13",
+  "prismProductionExecutableModified": false,
+  "testOnlyCAProvisioned": true,
+  "automaticJavaDownloadTestedOnLinux": false,
+  "userAccountsUsed": false,
+  "initialColdPhaseSeconds": 421,
+  "resumePhaseSeconds": 1131,
+  "configuredByCLI": true,
+  "gameWindowInitialized": true,
+  "observedScreen": "Minecraft accessibility welcome screen, visually inspected",
+  "verifiedGameFiles": {
+    "assetIndexSHA1": true,
+    "uniqueAssetsSHA1": 3888,
+    "clientJarSHA1": true
+  },
+  "mirrorErrorsDuringResume": 116,
+  "officialMetadataFallbacks": 0,
+  "originalFileFallbacks": 0,
+  "libraryJarsWithMatchingDeclaredSHA1": 57,
+  "libraryJarsWithoutMatchedDeclaredHash": []
+}

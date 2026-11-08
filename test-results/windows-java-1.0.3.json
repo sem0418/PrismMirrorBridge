@@ -1,0 +1,149 @@
+{
+  "bridgeVersion": "1.0.3",
+  "platform": "win32",
+  "architecture": "x64",
+  "windows": "10.0.26100",
+  "node": "v24.22.2",
+  "mode": "verify-java-fix",
+  "compatibilityRecipes": false,
+  "freshDataDirectory": true,
+  "fullGameLaunchVerified": false,
+  "userMachineVerified": false,
+  "probes": [
+    {
+      "path": "net.minecraft.java/index.json",
+      "status": 200
+    },
+    {
+      "path": "net.minecraft.java/java21.json",
+      "status": 200
+    },
+    {
+      "path": "org.lwjgl3/3.3.3.json",
+      "status": 200
+    },
+    {
+      "path": "net.minecraft/1.21.1.json",
+      "status": 200
+    },
+    {
+      "path": "org.lwjgl3/bridge-1.21.1.json",
+      "status": 200
+    }
+  ],
+  "windowsNativeDownload": {
+    "bytes": 1035586,
+    "checksumValid": true
+  },
+  "prism": {
+    "version": "11.1.1",
+    "officialZipSHA256": "05841d0b3bfc0a8212658457cc6035e1c29cd7ffae919464e874e384cbe8d062",
+    "checksumValid": true
+  },
+  "launcherBridgeCacheInitiallyEmpty": true,
+  "launcherBridgeUsesDefaultRetryAndTimeout": true,
+  "windowsTestCAStore": "LocalMachine Root on disposable elevated CI runner",
+  "interactiveCurrentUserSetupTested": false,
+  "lastInstallProgress": {
+    "seconds": 45,
+    "reason": "ENOENT"
+  },
+  "runtimeManifestSHA1Verified": "cb4394a27089d19f65d5baa6cf0482c27c3c7865",
+  "installedJava": {
+    "allFilesSHA1Verified": 402,
+    "bytes": 99041788,
+    "executableVersion": "openjdk version \"21.0.7\" 2025-04-15 LTS\r\nOpenJDK Runtime Environment Microsoft-11369940 (build 21.0.7+6-LTS)\r\nOpenJDK 64-Bit Server VM Microsoft-11369940 (build 21.0.7+6-LTS, mixed mode)",
+    "exitCode": 0
+  },
+  "prismAutomaticJavaVerified": true,
+  "actualPrismRequests": [
+    {
+      "path": "index.json",
+      "status": 200
+    },
+    {
+      "path": "index.json",
+      "status": 200
+    },
+    {
+      "path": "net.minecraft/index.json",
+      "status": 200
+    },
+    {
+      "path": "org.lwjgl3/index.json",
+      "status": 200
+    },
+    {
+      "path": "net.minecraft/1.21.1.json",
+      "status": 200
+    },
+    {
+      "path": "org.lwjgl3/3.3.3.json",
+      "status": 200
+    },
+    {
+      "path": "net.minecraft.java/index.json",
+      "status": 200
+    },
+    {
+      "path": "net.minecraft.java/java21.json",
+      "status": 200
+    }
+  ],
+  "prismJava501Reproduced": false,
+  "ui": "UI {\"buttons\":[\"\\u003c Back\",\"Finish\",\"Add Microsoft account\"],\"title\":\"Prism Launcher Quick Setup\"}\r\nINVOKED Prism Launcher Quick Setup\r\nUI {\"buttons\":[\"Yes\",\"No\"],\"title\":\"No Accounts\"}\r\nINVOKED No Accounts\r\nUI {\"buttons\":[\"Play Demo\",\"Cancel\"],\"title\":\"Play demo?\"}\r\nINVOKED Play demo?\r\nUI {\"buttons\":[\"OK\",\"Cancel\"],\"title\":\"Player name\"}\r\nINVOKED Player name\r\nUI {\"buttons\":[\"Abort\"],\"title\":\"Please wait...\"}\r\n",
+  "prismLogEvidence": [
+    "     0.006 Info: ID of instance to launch   : \"ColdStart501\" (unknown:0)",
+    "     0.098 Info: Found instance ID \"ColdStart501\" (unknown:0)",
+    "     0.098 Debug: Saving INI settings to \"<TEMP>/Fresh Prism Data/instances/ColdStart501/instance.cfg\" (unknown:0)",
+    "     0.111 Debug: Loaded instance \"ColdStart501\" from \"<TEMP>/Fresh Prism Data/instances/ColdStart501\" (unknown:0)",
+    "     2.077 Debug: <> Instance \"ColdStart501\" launching (unknown:0)",
+    "     5.151 Debug: \"ColdStart501\" | Component list save is scheduled (unknown:0)",
+    "     5.151 Debug: [launcher.instance.profile.resolve] \"ColdStart501\" | Remote loading is being run for \"net.minecraft\" (unknown:0)",
+    "     5.151 Debug: [launcher.instance.profile.resolve] \"ColdStart501\" | Remote loading is being run for \"org.lwjgl3\" (unknown:0)",
+    "     6.974 Debug: [launcher.instance.profile] \"ColdStart501\" | Component list update/resolve task succeeded (unknown:0)",
+    "     6.986 Debug: [launcher.instance.profile] \"ColdStart501\" | Applying \"net.minecraft\" GOOD (unknown:0)",
+    "     6.987 Debug: [launcher.instance.profile] \"ColdStart501\" | Applying \"org.lwjgl3\" GOOD (unknown:0)",
+    "    11.978 Debug: \"ColdStart501\" | Component list save performed now (unknown:0)",
+    "    48.107 Debug: Saving INI settings to \"<TEMP>/Fresh Prism Data/instances/ColdStart501/instance.cfg\" (unknown:0)",
+    "    48.119 Debug: Saving INI settings to \"<TEMP>/Fresh Prism Data/instances/ColdStart501/instance.cfg\" (unknown:0)",
+    "    48.127 Debug: Saving INI settings to \"<TEMP>/Fresh Prism Data/instances/ColdStart501/instance.cfg\" (unknown:0)",
+    "    48.347 Debug: Saving INI settings to \"<TEMP>/Fresh Prism Data/instances/ColdStart501/instance.cfg\" (unknown:0)",
+    "    48.369 Debug: Saving INI settings to \"<TEMP>/Fresh Prism Data/instances/ColdStart501/instance.cfg\" (unknown:0)",
+    "    48.387 Debug: Saving INI settings to \"<TEMP>/Fresh Prism Data/instances/ColdStart501/instance.cfg\" (unknown:0)",
+    "    48.405 Debug: Saving INI settings to \"<TEMP>/Fresh Prism Data/instances/ColdStart501/instance.cfg\" (unknown:0)",
+    "    48.425 Debug: Saving INI settings to \"<TEMP>/Fresh Prism Data/instances/ColdStart501/instance.cfg\" (unknown:0)",
+    "    48.445 Debug: [launcher.instance.profile] \"ColdStart501\" | Applying \"net.minecraft\" GOOD (unknown:0)",
+    "    48.446 Debug: [launcher.instance.profile] \"ColdStart501\" | Applying \"org.lwjgl3\" GOOD (unknown:0)",
+    "    48.447 Debug: \"ColdStart501\" : downloading libraries (unknown:0)",
+    "    48.450 Debug: Checksummed Download for: \"org.lwjgl:lwjgl-stb-natives-windows-x86:3.3.3\" storage: \"org/lwjgl/lwjgl-stb-natives-windows-x86/3.3.3/lwjgl-stb-natives-windows-x86-3.3.3.jar\" url: \"https://bmclapi2.bangbang93.com/maven/org/lwjgl/lwjgl-stb/3.3.3/lwjgl-stb-3.3.3-natives-windows-x86.jar\" expected sha1: \"b5c874687b9aac1a936501d4ed2c49567fd1b575\" (unknown:0)"
+  ],
+  "bridgeCounts": {
+    "requests": 412,
+    "errors": 0,
+    "bmcl": 203,
+    "mcim": 0,
+    "compatibilityRecipes": 0,
+    "fileFallback": 0,
+    "tunnels": 9,
+    "javaFileRequests": 396,
+    "javaFileDownloads": 191,
+    "javaFileCacheHits": 205,
+    "bulkModRequests": 0,
+    "bulkModBatches": 0,
+    "bulkWireBytes": 0,
+    "bulkDecodedBytes": 0,
+    "bulkJSONParseMs": 0
+  },
+  "diagnosticPassed": true,
+  "windowsTestCARemoved": true,
+  "ci": {
+    "url": "https://github.com/sem0418/PrismMirrorBridge/actions/runs/42485444928",
+    "commit": "161690d70f8c8f90e82024a8602cb962eceb1bf4",
+    "job": 128746175565,
+    "tests": 85,
+    "passed": 83,
+    "skipped": 2,
+    "failed": 0
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "status": 200,
+  "uid": "org.lwjgl3",
+  "version": "3.3.3",
+  "core": "org.lwjgl:lwjgl:3.3.3",
+  "officialCompatibility": 0
+}

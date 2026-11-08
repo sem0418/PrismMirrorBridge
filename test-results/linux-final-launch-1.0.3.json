@@ -1,0 +1,36 @@
+{
+  "scope": "Final candidate production code, official Prism 11.1.1 Linux demo, reused only files downloaded by the empty-cache experiment",
+  "configuredByCLI": true,
+  "gameMainMenuVisuallyVerified": true,
+  "gameVersion": "1.21.1 Demo",
+  "preinstalledJava": "/usr/bin/java (21.0.13)",
+  "automaticJavaDownloadTestedOnLinux": false,
+  "verifiedGameFiles": {
+    "assetIndexSHA1": true,
+    "uniqueAssetsSHA1": 3888,
+    "clientJarSHA1": true
+  },
+  "counts": {
+    "requests": 10,
+    "errors": 0,
+    "bmcl": 5,
+    "mcim": 0,
+    "compatibilityRecipes": 0,
+    "fileFallback": 0,
+    "tunnels": 3,
+    "javaFileRequests": 0,
+    "javaFileDownloads": 0,
+    "javaFileCacheHits": 0,
+    "bulkModRequests": 0,
+    "bulkModBatches": 0,
+    "bulkWireBytes": 0,
+    "bulkDecodedBytes": 0,
+    "bulkJSONParseMs": 0
+  },
+  "notes": [
+    "Test-only Qt driver selects official demo dialogs; launcher executable and authentication logic are unmodified.",
+    "After the welcome dialog, Continue was selected and the Minecraft 1.21.1 Demo main menu was visually verified.",
+    "Virtual X framebuffer required a normal F11 resize to refresh the screenshot; no launcher or game integrity check was bypassed.",
+    "Microsoft public-key/profile requests in the game reported DNS failures in the test sandbox. Microsoft login and multiplayer are not verified."
+  ]
+}

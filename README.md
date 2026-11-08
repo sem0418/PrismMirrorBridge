@@ -2,13 +2,17 @@
 
 独立运行的 Prism Launcher 镜像转换工具。它在本机提供 Prism 所需的组件元数据，并把指定下载请求转交 BMCLAPI / MCIM。无需重新编译 Prism。
 
-**支持平台：Windows x64。当前版本 v1.0.2 已由用户在 Windows 环境实测确认可正常使用。**
+**支持平台：Windows x64。本目录是 v1.0.3 测试候选，尚未正式发布；验证范围见测试报告。**
 
-[下载 Windows x64 便携包](https://github.com/sem0418/PrismMirrorBridge/releases/download/v1.0.2/PrismMirrorBridge-1.0.2-Windows-x64.zip) · [版本发布页](https://github.com/sem0418/PrismMirrorBridge/releases/tag/v1.0.2)
+[已发布的旧版 v1.0.2](https://github.com/sem0418/PrismMirrorBridge/releases/tag/v1.0.2)。v1.0.3 在用户复测确认后再发布，不把候选构建当作已发布版本。
 
 [更新记录](CHANGELOG.md) · [测试报告](TEST_REPORT.md) · [参与开发](CONTRIBUTING.md)
 
-请从 Releases 下载 `PrismMirrorBridge-1.0.2-Windows-x64.zip`，其中已包含 Windows 运行时。GitHub 的 **Code → Download ZIP** 和自动生成的 **Source code** 只包含源码，需要自行安装 Node.js 24.5+。
+测试候选包名为 `PrismMirrorBridge-1.0.3-Windows-x64.zip`，其中已包含 Windows 运行时。GitHub 的 **Code → Download ZIP** 和自动生成的 **Source code** 只包含源码，需要自行安装 Node.js 24.5+。
+
+**新设备 501：**旧版默认没有 `net.minecraft.java` 转换器。Prism 启动时自动安装 Java 会访问它，已有适用 Java 的设备可能不触发。1.0.3 直接从 BMCL 生成 Windows x64 的 Mojang Java 元数据，并验证及缓存运行时文件清单。手动选择的 LWJGL 3.3.3 也可在没有预热 Minecraft 元数据时解析；其他组件的 501 会显示组件名称。
+
+**从零重装：**完全退出 Prism 和工具 → 在旧工具目录运行 `03-undo.cmd` 撤销接入 → 删除旧工具目录 → 解压新包 → 运行新工具的 `01-setup.cmd` 选择同一份 `prismlauncher.cfg` → 运行 `02-start.cmd` → 打开 Prism 重试。保留 Prism 数据目录；无需复制旧 `config.json` 或 `.bridge`。如果只替换原工具目录中的程序文件而保留原接入，请退出 Prism 后运行 `05-repair-metadata.cmd`，避免旧官方 Java 元数据的哈希状态混入新转换源。
 
 ## Windows 使用
 
@@ -23,7 +27,7 @@
 
 建议先新建一个 1.20.1 + Fabric 实例，搜索并下载一个模组，确认本机接入正常后再使用其他实例。现有实例、账号和游戏文件不会被接入脚本删除。
 
-默认严格使用 BMCL 游戏元数据，请在 Prism 中选择已有的适用 Java。若需要 Prism 的 Java 自动下载或额外老组件配方，可按下文显式启用兼容模式。
+默认严格使用 BMCL 游戏元数据，并支持 Prism 的 Mojang Java 自动下载，提供 BMCL 当前实际列出的 Windows x64 运行时。也可在 Prism 中手动选择已有的适用 Java。其他 Java 供应商及额外老组件仍需显式启用兼容模式。
 
 **撤销：**关闭 Prism，运行 `03-undo.cmd`，选择同一个配置文件。它恢复接入前的网络字段、保留之后修改的其他设置，并移除本次安装的 CA 信任。如果同一工具接入了多个 Prism 数据目录，先分别恢复所有目录，再移除 CA 信任。
 
@@ -35,6 +39,8 @@
 | --- | --- |
 | Minecraft 版本列表 | BMCL Mojang manifest → Prism `uid / versions / version / requires` 格式 |
 | Minecraft 版本文件 | BMCL Mojang JSON → Prism Minecraft、LWJGL 两个组件；转换 `mainJar`、Java 要求、启动参数和 traits |
+| Mojang Java 运行时 | BMCL Java 清单 → Prism `net.minecraft.java` 索引及版本组件，仅 Windows x64；原始清单恢复后必须与 Mojang SHA1 和长度完全一致，Java 文件仍逐个校验 |
+| Java 重复小文件 | 合并已验证清单中相同文件的请求，并按原 SHA1 缓存；避免同一许可证被多个安装路径重复下载，大文件仍流式传输 |
 | 原生库 | 保留操作系统规则；应用 Prism 兼容补丁；分开保存 split-native 工件，避免被合并覆盖 |
 | Fabric、Quilt | 从 BMCL loader 信息或 loader JAR 内的安装描述转换为 Prism patch；映射独立的 intermediary 依赖 |
 | Forge、NeoForge | 从 BMCL Maven 列表和 installer JAR 读取版本、依赖与处理器信息，生成 `libraries / mavenFiles / +tweakers` 等 Prism 数据 |
@@ -48,14 +54,14 @@
 
 ## 需要准确区分的边界
 
-- **默认不会把失败的游戏元数据请求悄悄转回 Prism 官方源。**`compatibilityRecipes` 默认为 `false`。若显式启用 `true`，Java 运行时元数据、非标准手动 LWJGL 版本，以及无法转换的老组件可按需读取 Prism 官方兼容描述。主要转换链路的联网测试关闭了兼容配方，验证没有访问 Prism 元数据源。
+- **默认不会把失败的游戏元数据请求悄悄转回 Prism 官方源。**`compatibilityRecipes` 默认为 `false`。若显式启用 `true`，其他供应商的 Java 元数据、非标准手动 LWJGL 版本，以及无法转换的老组件可按需读取 Prism 官方兼容描述。Windows x64 Mojang Java 转换不依赖兼容模式；BMCL 请求失败仍明确失败。
 - BMCL 的版本接口遇到部分 404/5xx 时，可尝试同一个 BMCL 根地址下的 manifest 对应文件路径；不会因此改用 Mojang 或 Prism 官方地址，也不会绕过 429 限流。
-- 保持 `compatibilityRecipes: false` 时，无法处理的组件会明确报错。新实例使用 `bridge-<Minecraft版本>` 的 LWJGL 组件。已解析游戏版本对应的普通 LWJGL 版本可自动复用 BMCL 数据；其他手动替换版本仍可能需要兼容配方。ForgeWrapper、某些平台补丁等 Prism 支持文件可能保留其原下载源，所以这并不表示每个网络文件都只来自 BMCL/MCIM。
+- 保持 `compatibilityRecipes: false` 时，无法处理的组件会明确报错并标明组件名称。新实例使用 `bridge-<Minecraft版本>` 的 LWJGL 组件；普通 3.3.1、3.3.3 及旧版 2.9.4-nightly 别名可直接从对应 BMCL 游戏数据生成，其他已解析游戏版本对应的别名会在运行中补充。ForgeWrapper、某些平台补丁等 Prism 支持文件可能保留其原下载源，所以这并不表示每个网络文件都只来自 BMCL/MCIM。
 - MCIM 当前文档明确要求 **不要替换 `mediafilez.forgecdn.net`**。该域名保留原始 HTTPS 连接；`edge.forgecdn.net`、`media.forgecdn.net` 则走 MCIM。
 - CurseForge 完整介绍接口返回 404 时，转换器使用 MCIM 的项目摘要并在正文标明“仅为摘要”。没有摘要、未缓存内容、更新日志及其他不支持的接口仍明确返回错误；不会伪造完整内容或空成功结果。
 - 模组文件默认 `fileFallback: false`：镜像失败会报错；改为 `true` 后才允许在 MCIM 文件失败时尝试原地址，`/health` 会显示回退次数。MCIM 本身也可能返回到其他 CDN 的重定向。
 - Microsoft 登录、Xbox、Minecraft 账号服务等不在解密名单内，代理只转发加密连接。这里验证了透传机制，没有使用真实账号执行登录。
-- 1.0.2 已由用户在 Windows 环境实测确认正常使用。Windows CI 检查核心转换和 CLI，具体范围及历史诊断记录见 [TEST_REPORT.md](TEST_REPORT.md)。
+- 用户曾确认 1.0.2 在其 Windows 环境可用，随后报告新设备启动 501；这不代表所有首次安装场景已通过。1.0.3 的 Linux 核心验证与 Windows 实际 Prism 流程分别记录在 [TEST_REPORT.md](TEST_REPORT.md)，不把单元测试等同于完整游戏或整合包启动成功。
 
 ## 从 1.0.0 / 1.0.1 升级
 
@@ -156,7 +162,7 @@ node cli.mjs untrust-ca             # 仅 Windows
 
 ```sh
 python scripts/build-release.py
-python scripts/check-release.py dist/PrismMirrorBridge-1.0.2-Windows-x64.zip
+python scripts/check-release.py dist/PrismMirrorBridge-1.0.3-Windows-x64.zip
 ```
 
 可通过 `--node-exe /path/to/official/node.exe` 复用同一版本的官方文件，仍会校验 SHA256。`SOURCE_DATE_EPOCH` 可固定 ZIP 时间戳。源码不提交运行时二进制；发布包内包含对应第三方许可和完整工具源码。

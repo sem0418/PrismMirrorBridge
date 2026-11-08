@@ -1,0 +1,116 @@
+{
+  "bridgeVersion": "1.0.2",
+  "platform": "win32",
+  "architecture": "x64",
+  "windows": "10.0.26100",
+  "node": "v24.22.2",
+  "productionChanged": false,
+  "compatibilityRecipes": false,
+  "freshDataDirectory": true,
+  "fullGameLaunchVerified": false,
+  "userMachineVerified": false,
+  "probes": [
+    {
+      "path": "net.minecraft.java/index.json",
+      "status": 501
+    },
+    {
+      "path": "net.minecraft.java/java21.json",
+      "status": 501
+    },
+    {
+      "path": "org.lwjgl3/3.3.3.json",
+      "status": 501
+    },
+    {
+      "path": "net.minecraft/1.21.1.json",
+      "status": 200
+    },
+    {
+      "path": "org.lwjgl3/bridge-1.21.1.json",
+      "status": 200
+    }
+  ],
+  "windowsNativeDownload": {
+    "bytes": 1035586,
+    "checksumValid": true
+  },
+  "prism": {
+    "version": "11.1.1",
+    "officialZipSHA256": "05841d0b3bfc0a8212658457cc6035e1c29cd7ffae919464e874e384cbe8d062",
+    "checksumValid": true
+  },
+  "actualPrismRequests": [
+    {
+      "path": "index.json",
+      "status": 200
+    },
+    {
+      "path": "index.json",
+      "status": 200
+    },
+    {
+      "path": "net.minecraft/index.json",
+      "status": 200
+    },
+    {
+      "path": "org.lwjgl3/index.json",
+      "status": 200
+    },
+    {
+      "path": "net.minecraft/1.21.1.json",
+      "status": 200
+    },
+    {
+      "path": "org.lwjgl3/bridge-1.21.1.json",
+      "status": 200
+    },
+    {
+      "path": "net.minecraft.java/index.json",
+      "status": 501
+    },
+    {
+      "path": "net.minecraft.java/index.json",
+      "status": 501
+    },
+    {
+      "path": "net.minecraft.java/index.json",
+      "status": 501
+    }
+  ],
+  "prismJava501Reproduced": true,
+  "ui": "UI {\"buttons\":[\"\\u003c Back\",\"Finish\",\"Add Microsoft account\"],\"title\":\"Prism Launcher Quick Setup\"}\r\nINVOKED Prism Launcher Quick Setup\r\nUI {\"buttons\":[\"Yes\",\"No\"],\"title\":\"No Accounts\"}\r\nINVOKED No Accounts\r\nUI {\"buttons\":[\"Play Demo\",\"Cancel\"],\"title\":\"Play demo?\"}\r\nINVOKED Play demo?\r\nUI {\"buttons\":[\"OK\",\"Cancel\"],\"title\":\"Player name\"}\r\nINVOKED Player name\r\n",
+  "prismLogEvidence": [
+    "     0.004 Info: ID of instance to launch   : \"ColdStart501\" (unknown:0)",
+    "     0.083 Info: Found instance ID \"ColdStart501\" (unknown:0)",
+    "     0.083 Debug: Saving INI settings to \"<TEMP>/Fresh Prism Data/instances/ColdStart501/instance.cfg\" (unknown:0)",
+    "     0.102 Debug: Loaded instance \"ColdStart501\" from \"<TEMP>/Fresh Prism Data/instances/ColdStart501\" (unknown:0)",
+    "     2.103 Debug: <> Instance \"ColdStart501\" launching (unknown:0)",
+    "     5.163 Debug: \"ColdStart501\" | Component list save is scheduled (unknown:0)",
+    "     5.163 Debug: [launcher.instance.profile.resolve] \"ColdStart501\" | Remote loading is being run for \"net.minecraft\" (unknown:0)",
+    "     5.163 Debug: [launcher.instance.profile.resolve] \"ColdStart501\" | Remote loading is being run for \"org.lwjgl3\" (unknown:0)",
+    "     5.276 Debug: [launcher.instance.profile] \"ColdStart501\" | Component list update/resolve task succeeded (unknown:0)",
+    "     5.282 Debug: [launcher.instance.profile] \"ColdStart501\" | Applying \"net.minecraft\" GOOD (unknown:0)",
+    "     5.283 Debug: [launcher.instance.profile] \"ColdStart501\" | Applying \"org.lwjgl3\" GOOD (unknown:0)",
+    "     5.325 Critical: [launcher.task.net.download] \"{4a801583-9b05-43fb-a558-e68f562fda72}\" Failed \"http://127.0.0.1:61568/meta/v1/net.minecraft.java/index.json\" with error QNetworkReply::OperationNotImplementedError (unknown:0)",
+    "     5.326 Critical: [launcher.task.net.download] \"{4a801583-9b05-43fb-a558-e68f562fda72}\" HTTP status: 501 \"Error transferring http://127.0.0.1:61568/meta/v1/net.minecraft.java/index.json - server replied: Not Implemented\" (unknown:0)",
+    "     5.326 Critical: [launcher.task.net.download] \"{4a801583-9b05-43fb-a558-e68f562fda72}\" Response from server: \"{\\\"error\\\":\\\"No BMCL converter for this component/version; compatibility recipes are disabled or unavailable\\\",\\\"status\\\":501}\" (unknown:0)",
+    "     5.335 Critical: [launcher.task.net.download] \"{4a801583-9b05-43fb-a558-e68f562fda72}\" Failed \"http://127.0.0.1:61568/meta/v1/net.minecraft.java/index.json\" with error QNetworkReply::OperationNotImplementedError (unknown:0)",
+    "     5.335 Critical: [launcher.task.net.download] \"{4a801583-9b05-43fb-a558-e68f562fda72}\" HTTP status: 501 \"Error transferring http://127.0.0.1:61568/meta/v1/net.minecraft.java/index.json - server replied: Not Implemented\" (unknown:0)",
+    "     5.335 Critical: [launcher.task.net.download] \"{4a801583-9b05-43fb-a558-e68f562fda72}\" Response from server: \"{\\\"error\\\":\\\"No BMCL converter for this component/version; compatibility recipes are disabled or unavailable\\\",\\\"status\\\":501}{\\\"error\\\":\\\"No BMCL converter for this component/version; compatibility recipes are disabled or unavailable\\\",\\\"status\\\":501}\" (unknown:0)",
+    "     5.340 Critical: [launcher.task.net.download] \"{4a801583-9b05-43fb-a558-e68f562fda72}\" Failed \"http://127.0.0.1:61568/meta/v1/net.minecraft.java/index.json\" with error QNetworkReply::OperationNotImplementedError (unknown:0)",
+    "     5.340 Critical: [launcher.task.net.download] \"{4a801583-9b05-43fb-a558-e68f562fda72}\" HTTP status: 501 \"Error transferring http://127.0.0.1:61568/meta/v1/net.minecraft.java/index.json - server replied: Not Implemented\" (unknown:0)",
+    "     5.340 Critical: [launcher.task.net.download] \"{4a801583-9b05-43fb-a558-e68f562fda72}\" Response from server: \"{\\\"error\\\":\\\"No BMCL converter for this component/version; compatibility recipes are disabled or unavailable\\\",\\\"status\\\":501}{\\\"error\\\":\\\"No BMCL converter for this component/version; compatibility recipes are disabled or unavailable\\\",\\\"status\\\":501}{\\\"error\\\":\\\"No BMCL converter for this component/version; compatibility recipes are disabled or unavailable\\\",\\\"status\\\":501}\" (unknown:0)",
+    "     5.341 Warning: \"Error transferring http://127.0.0.1:61568/meta/v1/net.minecraft.java/index.json - server replied: Not Implemented\" (unknown:0)",
+    "     5.351 Debug: \"ColdStart501\" | Component list save performed now (unknown:0)",
+    "     5.361 Debug: \"ColdStart501\" | Component list save is scheduled (unknown:0)",
+    "     5.362 Debug: [launcher.instance.profile] \"ColdStart501\" | Component list update/resolve task succeeded (unknown:0)",
+    "     5.390 Debug: [launcher.instance.profile] \"ColdStart501\" | Applying \"net.minecraft\" GOOD (unknown:0)",
+    "     5.390 Debug: [launcher.instance.profile] \"ColdStart501\" | Applying \"org.lwjgl3\" GOOD (unknown:0)",
+    "     5.483 Debug: Saving INI settings to \"<TEMP>/Fresh Prism Data/instances/ColdStart501/instance.cfg\" (unknown:0)",
+    "     5.510 Debug: Saving INI settings to \"<TEMP>/Fresh Prism Data/instances/ColdStart501/instance.cfg\" (unknown:0)",
+    "     5.546 Debug: Saving INI settings to \"<TEMP>/Fresh Prism Data/instances/ColdStart501/instance.cfg\" (unknown:0)",
+    "     5.573 Debug: Saving INI settings to \"<TEMP>/Fresh Prism Data/instances/ColdStart501/instance.cfg\" (unknown:0)"
+  ],
+  "diagnosticPassed": true
+}

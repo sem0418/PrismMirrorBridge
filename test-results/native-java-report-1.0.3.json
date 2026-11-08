@@ -1,0 +1,124 @@
+{
+  "scope": "BMCL Windows Java conversion and original Prism parser on Linux; not runtime execution",
+  "cases": [
+    {
+      "major": 8,
+      "runtimes": 1,
+      "manifestEntries": 208,
+      "manifestHashesVerified": true
+    },
+    {
+      "major": 16,
+      "runtimes": 1,
+      "manifestEntries": 483,
+      "manifestHashesVerified": true
+    },
+    {
+      "major": 17,
+      "runtimes": 3,
+      "manifestEntries": 1458,
+      "manifestHashesVerified": true
+    },
+    {
+      "major": 21,
+      "runtimes": 1,
+      "manifestEntries": 484,
+      "manifestHashesVerified": true
+    },
+    {
+      "major": 25,
+      "runtimes": 1,
+      "manifestEntries": 493,
+      "manifestHashesVerified": true
+    }
+  ],
+  "passed": true,
+  "parsed": [
+    {
+      "activeLibraries": {
+        "linux-amd64": [],
+        "osx-aarch64": [],
+        "osx-amd64": [],
+        "windows-aarch64": [],
+        "windows-amd64": []
+      },
+      "file": "net.minecraft.java__java21.json",
+      "libraries": 0,
+      "mainClass": "",
+      "mavenFiles": 0,
+      "passed": true,
+      "problems": [],
+      "uid": "net.minecraft.java",
+      "version": "java21"
+    },
+    {
+      "activeLibraries": {
+        "linux-amd64": [],
+        "osx-aarch64": [],
+        "osx-amd64": [],
+        "windows-aarch64": [],
+        "windows-amd64": []
+      },
+      "file": "net.minecraft.java__java17.json",
+      "libraries": 0,
+      "mainClass": "",
+      "mavenFiles": 0,
+      "passed": true,
+      "problems": [],
+      "uid": "net.minecraft.java",
+      "version": "java17"
+    },
+    {
+      "activeLibraries": {
+        "linux-amd64": [],
+        "osx-aarch64": [],
+        "osx-amd64": [],
+        "windows-aarch64": [],
+        "windows-amd64": []
+      },
+      "file": "net.minecraft.java__java25.json",
+      "libraries": 0,
+      "mainClass": "",
+      "mavenFiles": 0,
+      "passed": true,
+      "problems": [],
+      "uid": "net.minecraft.java",
+      "version": "java25"
+    },
+    {
+      "activeLibraries": {
+        "linux-amd64": [],
+        "osx-aarch64": [],
+        "osx-amd64": [],
+        "windows-aarch64": [],
+        "windows-amd64": []
+      },
+      "file": "net.minecraft.java__java16.json",
+      "libraries": 0,
+      "mainClass": "",
+      "mavenFiles": 0,
+      "passed": true,
+      "problems": [],
+      "uid": "net.minecraft.java",
+      "version": "java16"
+    },
+    {
+      "activeLibraries": {
+        "linux-amd64": [],
+        "osx-aarch64": [],
+        "osx-amd64": [],
+        "windows-aarch64": [],
+        "windows-amd64": []
+      },
+      "file": "net.minecraft.java__java8.json",
+      "libraries": 0,
+      "mainClass": "",
+      "mavenFiles": 0,
+      "passed": true,
+      "problems": [],
+      "uid": "net.minecraft.java",
+      "version": "java8"
+    }
+  ],
+  "compatibilityRequests": 0
+}
