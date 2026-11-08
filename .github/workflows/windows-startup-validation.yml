@@ -20,4 +20,4 @@ jobs:
       - name: Existing Windows regression tests
         run: npm test
       - name: Probe first-run requests with official Prism
-        run: node scripts/windows-startup-validation.mjs
+        run: node scripts/windows-startup-validation.mjs --fixed

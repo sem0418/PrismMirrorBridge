@@ -49,6 +49,7 @@ export class Bridge {
   async start() {
     await new Promise((resolve, reject) => { this.server.once('error', reject); this.server.listen(this.config.port, this.config.listen, resolve); });
     this.port = this.server.address().port;
+    this.meta.port = this.port;
     return this;
   }
   async close() {
@@ -88,6 +89,13 @@ export class Bridge {
     if (url.pathname === '/health') return jsonResponse(res, { ok: true, version: VERSION, metaURL: `http://127.0.0.1:${this.port}/meta/v1/`,
       proxy: `127.0.0.1:${this.port}`, counts: this.stats, compatibilityRecipes: this.config.compatibilityRecipes, fileFallback: this.config.fileFallback }, 200, req.method === 'HEAD');
     if (url.pathname.startsWith('/meta/v1/')) return jsonResponse(res, await this.meta.request(url.pathname.slice(9)), 200, req.method === 'HEAD', 'bmcl-converter');
+    const runtime = url.pathname.match(/^\/runtime\/([a-f0-9]{40})\.json$/);
+    if (runtime) {
+      const bytes = await this.meta.javaManifest(runtime[1]);
+      res.writeHead(200, { 'content-type': 'application/json', 'content-length': bytes.length,
+        'cache-control': 'no-store', 'x-prism-bridge-source': 'bmcl-java-manifest', 'x-content-type-options': 'nosniff' });
+      return res.end(req.method === 'HEAD' ? undefined : bytes);
+    }
     if (url.pathname.startsWith('/assets/')) return this.relay(req, res, this.config.bmcl + url.pathname + url.search, 'bmcl');
     if (url.pathname === '/') {
       res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' });

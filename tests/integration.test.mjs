@@ -12,14 +12,23 @@ import { Transport } from '../src/transport.mjs';
 import { ensureCA, CertificateStore } from '../src/certificates.mjs';
 import { viaProxy } from '../scripts/test-client.mjs';
 import { USER_AGENT } from '../src/version.mjs';
+import { JAVA_MANIFEST_PATH } from '../src/java-runtime.mjs';
+import { createHash } from 'node:crypto';
 
 let bridge, upstream, dir, config, upstreamURL, observed = [], raw, failFiles = false, failPrimaryMetadata = false, transient = 0;
+const javaManifest = Buffer.from('{"files":{"bin/java.exe":{"type":"file","downloads":{"raw":{"url":"https://piston-data.mojang.com/v1/objects/' + 'b'.repeat(40) + '/java.exe","sha1":"' + 'b'.repeat(40) + '","size":4}},"executable":true}}}');
+const javaManifestHash = createHash('sha1').update(javaManifest).digest('hex');
 before(async () => {
   dir = mkdtempSync(join(tmpdir(), 'prism-bridge-test-'));
   raw = JSON.parse(readFileSync(new URL('./fixtures/bmcl-vanilla.json', import.meta.url)));
   upstream = http.createServer(async (req, res) => {
     const chunks = []; for await (const c of req) chunks.push(c); const body = Buffer.concat(chunks).toString();
     observed.push({ url: req.url, method: req.method, headers: req.headers, body });
+    if (req.url === JAVA_MANIFEST_PATH) return res.end(JSON.stringify({ 'windows-x64': { 'java-runtime-delta': [{
+      version: { name: '21.0.7', released: '2025-05-19T08:34:42Z' },
+      manifest: { url: 'https://piston-meta.mojang.com/v1/packages/' + javaManifestHash + '/manifest.json', sha1: javaManifestHash, size: javaManifest.length },
+    }] } }));
+    if (req.url === '/v1/packages/' + javaManifestHash + '/manifest.json') return res.end(javaManifest);
     if (req.url.startsWith('/mc/game/')) { res.setHeader('content-type', 'application/json'); return res.end(JSON.stringify({ latest: { release: '1.20.1' }, versions: [{ id: '1.20.1', type: 'release', releaseTime: raw.releaseTime, url: 'https://piston-meta.mojang.com/v1/packages/test/1.20.1.json' }] })); }
     if (req.url === '/version/1.20.1/json') {
       if (failPrimaryMetadata) { res.writeHead(503); return res.end('busy'); }
@@ -69,6 +78,29 @@ test('CONNECT TLS certificate is valid for the API host and trusted only by this
   assert.equal(response.status, 200); assert.equal(JSON.parse(response.body).hits[0].project_id, 'AANobbMI');
   assert.equal(response.peer.subject.CN, 'api.modrinth.com');
   assert(new X509Certificate(response.peer.raw).checkHost('api.modrinth.com'));
+});
+test('fresh Java metadata succeeds with compatibility disabled and proxied runtime manifest keeps its original SHA1', async () => {
+  const root = `http://127.0.0.1:${bridge.port}/meta/v1/`;
+  const indexResponse = await fetch(root + 'net.minecraft.java/index.json');
+  assert.equal(indexResponse.status, 200);
+  assert.equal((await indexResponse.json()).versions[0].version, 'java21');
+  const componentResponse = await fetch(root + 'net.minecraft.java/java21.json'); assert.equal(componentResponse.status, 200);
+  const runtime = (await componentResponse.json()).runtimes[0];
+  assert.equal(runtime.checksum.hash, javaManifestHash);
+  assert(runtime.url.startsWith(`http://127.0.0.1:${bridge.port}/runtime/`));
+  const manifestResponse = await fetch(runtime.url); assert.equal(manifestResponse.status, 200);
+  assert.deepEqual(Buffer.from(await manifestResponse.arrayBuffer()), javaManifest);
+  const head = await fetch(runtime.url, { method: 'HEAD' }); assert.equal(head.status, 200);
+  assert.equal(Number(head.headers.get('content-length')), javaManifest.length); assert.equal((await head.arrayBuffer()).byteLength, 0);
+  assert.equal((await fetch(`http://127.0.0.1:${bridge.port}/runtime/${'0'.repeat(40)}.json`)).status, 404);
+  // Prism's official HTTPS identity is intercepted with a verified local CA.
+  const download = await viaProxy(bridge.port, 'https://piston-meta.mojang.com/v1/packages/' + javaManifestHash + '/manifest.json', { ca: bridge.ca.cert,
+    headers: { authorization: 'not-for-mirror', cookie: 'not-for-mirror', 'x-api-key': 'not-for-mirror' } });
+  assert.equal(download.status, 200); assert.deepEqual(download.body, javaManifest);
+  assert.equal(createHash('sha1').update(download.body).digest('hex'), runtime.checksum.hash);
+  const forwarded = observed.findLast(r => r.url === '/v1/packages/' + javaManifestHash + '/manifest.json');
+  assert.equal(forwarded.headers.authorization, undefined); assert.equal(forwarded.headers.cookie, undefined); assert.equal(forwarded.headers['x-api-key'], undefined);
+  assert.equal(bridge.stats.compatibilityRecipes, 0);
 });
 test('Qt loopback metadata requests also work in absolute HTTP proxy form', async () => {
   const r = await new Promise((resolve, reject) => {

@@ -2,12 +2,17 @@ import { HTTPError } from './transport.mjs';
 import { zipJSON } from './zip.mjs';
 import { base, EPOCH, convertMinecraft, convertFabric, convertForge, mavenPath } from './converters.mjs';
 import { rewriteGameURLs, mirrorURL } from './routing.mjs';
+import { convertWindowsJava, restoreJavaManifest, JAVA_MANIFEST_PATH } from './java-runtime.mjs';
+import { readFile, mkdir, writeFile, rename } from 'node:fs/promises';
+import { join } from 'node:path';
+import { createHash, randomBytes } from 'node:crypto';
 
 export const PACKAGES = {
   'net.minecraft': 'Minecraft', 'org.lwjgl': 'LWJGL 2', 'org.lwjgl3': 'LWJGL 3',
   'net.fabricmc.fabric-loader': 'Fabric Loader', 'net.fabricmc.intermediary': 'Intermediary Mappings',
   'org.quiltmc.quilt-loader': 'Quilt Loader',
   'net.minecraftforge': 'Forge', 'net.neoforged': 'NeoForge',
+  'net.minecraft.java': 'Java Runtimes (BMCL, Windows x64)',
 };
 const COMPAT_UIDS = new Set(['com.azul.java', 'com.ibm.java', 'net.adoptium.java', 'net.minecraft.java',
   'com.mumfrey.liteloader', 'org.lwjgl', 'org.lwjgl3', 'net.minecraftforge', 'net.neoforged',
@@ -16,7 +21,7 @@ const COMPAT_UIDS = new Set(['com.azul.java', 'com.ibm.java', 'net.adoptium.java
 const forgeCompare = (a, b) => b.version.localeCompare(a.version, 'en', { numeric: true });
 const LWJGL_SOURCES = {
   'org.lwjgl': { '2.9.4-nightly-20150209': '1.12.2' },
-  'org.lwjgl3': { '3.3.1': '1.20.1' },
+  'org.lwjgl3': { '3.3.1': '1.20.1', '3.3.3': '1.21.1' },
 };
 export function forgeMavenEntry(fullVersion) {
   const m = fullVersion.match(/^([^-]+)-([\d.]+)(?:-(.+))?$/);
@@ -34,6 +39,7 @@ export class MetadataService {
   constructor(config, transport, onSource = () => {}) {
     this.config = config; this.t = transport; this.onSource = onSource;
     this.memoized = new Map();
+    this.javaPending = new Map();
     this.graphicsAliases = new Map(Object.entries(LWJGL_SOURCES).flatMap(([uid, entries]) => Object.entries(entries).map(([version, source]) => [uid + ':' + version, source])));
   }
   async memo(key, fn) {
@@ -67,7 +73,7 @@ export class MetadataService {
     });
   }
   async compatibility(uid, file) {
-    if (!this.config.compatibilityRecipes || !COMPAT_UIDS.has(uid)) throw new HTTPError(501, 'No BMCL converter for this component/version; compatibility recipes are disabled or unavailable');
+    if (!this.config.compatibilityRecipes || !COMPAT_UIDS.has(uid)) throw new HTTPError(501, `No BMCL converter for ${uid}/${file}; compatibility recipes are disabled or unavailable`);
     this.onSource('prism-compatibility');
     const value = await this.t.json(new URL(encodeURIComponent(uid) + '/' + encodeURIComponent(file), this.config.prismRecipes).href);
     // Changing nested URLs invalidates all metadata-file SHA256 references.
@@ -80,6 +86,33 @@ export class MetadataService {
   }
   async mappingsList(quilt = false) {
     return this.t.json(this.bmcl((quilt ? '/quilt-meta/v3' : '/fabric-meta/v2') + '/versions/' + (quilt ? 'hashed' : 'intermediary')));
+  }
+  async javaRuntimes() {
+    // memo() clones plain JSON; Map is supported by structuredClone as well.
+    return this.memo('windows-java', async () => convertWindowsJava(await this.t.json(this.bmcl(JAVA_MANIFEST_PATH)), this.config));
+  }
+  async javaManifest(hash, source) {
+    if (!/^[a-f0-9]{40}$/.test(hash)) throw new HTTPError(404, 'Unknown Java runtime manifest');
+    if (this.javaPending.has(hash)) return this.javaPending.get(hash);
+    const job = (async () => {
+      const directory = join(this.config.dataDir, 'java-manifests'), path = join(directory, hash + '.json');
+      try {
+        const bytes = await readFile(path);
+        if (bytes.length > 2 * 1024 * 1024 || createHash('sha1').update(bytes).digest('hex') !== hash)
+          throw new HTTPError(502, 'Cached Java runtime manifest failed integrity verification');
+        return bytes;
+      } catch (error) { if (error.code !== 'ENOENT') throw error; }
+      if (!source) throw new HTTPError(404, 'Unknown Java runtime manifest');
+      if (source.sha1 !== hash || !Number.isSafeInteger(source.size) || source.size <= 0 || source.size > 2 * 1024 * 1024)
+        throw new HTTPError(502, 'Invalid Java runtime manifest reference');
+      const bytes = restoreJavaManifest(await this.t.limit.run(() => this.t.bytes(source.url, { maxBytes: 2 * 1024 * 1024 })), source);
+      await mkdir(directory, { recursive: true });
+      const temporary = path + '.' + randomBytes(6).toString('hex');
+      await writeFile(temporary, bytes, { mode: 0o600 }); await rename(temporary, path);
+      return bytes;
+    })();
+    this.javaPending.set(hash, job);
+    try { return await job; } finally { this.javaPending.delete(hash); }
   }
   async forgeList(neo = false) {
     return this.memo('forge-list:' + neo, async () => {
@@ -108,6 +141,7 @@ export class MetadataService {
     });
   }
   async index(uid) {
+    if (uid === 'net.minecraft.java') return (await this.javaRuntimes()).index;
     const out = { formatVersion: 1, uid, name: PACKAGES[uid], versions: [] };
     if (uid === 'net.minecraft') {
       const m = await this.manifest();
@@ -143,6 +177,16 @@ export class MetadataService {
     return out;
   }
   async component(uid, version) {
+    if (uid === 'net.minecraft.java') {
+      const data = await this.javaRuntimes(), component = data.components.get(version);
+      if (!component) throw new HTTPError(404, 'Unknown Windows Java runtime version');
+      await Promise.all(component.runtimes.map(async runtime => {
+        const hash = runtime.checksum.hash;
+        await this.javaManifest(hash, data.manifests.get(hash));
+        runtime.url = `http://127.0.0.1:${this.port || this.config.port}/runtime/${hash}.json`;
+      }));
+      return component;
+    }
     if (uid === 'net.minecraft') return (await this.minecraft(version)).minecraft;
     if (uid === 'org.lwjgl' || uid === 'org.lwjgl3') {
       if (!version.startsWith('bridge-')) {
@@ -150,6 +194,8 @@ export class MetadataService {
         if (source) {
           const graphics = (await this.minecraft(source)).graphics;
           if (graphics.uid !== uid) throw new HTTPError(404, 'LWJGL alias generation mismatch');
+          const core = graphics.libraries.find(l => /^org\.lwjgl(?:\.lwjgl)?:lwjgl:/.test(l.name));
+          if (core?.name.split(':')[2] !== version) throw new HTTPError(502, 'BMCL LWJGL alias version mismatch');
           graphics.version = version;
           return graphics;
         }
@@ -209,7 +255,7 @@ export class MetadataService {
     // name into a different upstream path.
     if (path === 'index.json') return { formatVersion: 1, packages: [
       ...Object.entries(PACKAGES).map(([uid, name]) => ({ uid, name })),
-      ...(this.config.compatibilityRecipes ? ['com.azul.java', 'com.ibm.java', 'net.adoptium.java', 'net.minecraft.java'].map(uid => ({ uid, name: 'Java Runtimes' })) : []),
+      ...(this.config.compatibilityRecipes ? ['com.azul.java', 'com.ibm.java', 'net.adoptium.java'].map(uid => ({ uid, name: 'Java Runtimes' })) : []),
     ] };
     const m = path.match(/^([a-zA-Z0-9_.-]+)\/([^/]+)\.json$/);
     if (!m || m[1].includes('..')) throw new HTTPError(404, 'Unknown metadata path');

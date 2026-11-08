@@ -21,7 +21,7 @@ report.skippedFileChecks = [];
 const fileChecks = new Set(['MCIM CurseForge thumbnail via verified CONNECT TLS', 'MCIM Modrinth JAR download and SHA512/SHA1',
   'MCIM CurseForge JAR download and SHA1', 'BMCL Windows native JAR and SHA1', 'Prism Linux GLFW compatibility JAR and SHA1',
   'BMCL asset index and asset content SHA1', 'BMCL Minecraft client JAR download and SHA1']);
-let vanilla, graphics, versions, cfFile;
+let vanilla, graphics, versions, cfFile, java21;
 async function check(name, fn) {
   if (apiOnly && fileChecks.has(name)) { report.skippedFileChecks.push(name); console.log('SKIP ' + name + ' (api-only scope)'); return; }
   const start = Date.now();
@@ -30,6 +30,8 @@ async function check(name, fn) {
   } catch (e) {
     report.tests.push({ name, passed: false, durationMs: Date.now() - start, error: e.message }); console.log('FAIL ' + name + ': ' + e.message);
   }
+  await mkdir(join(root, 'test-results'), { recursive: true });
+  await writeFile(join(root, 'test-results/live-report.json'), JSON.stringify({ ...report, inProgress: true }, null, 2) + '\n');
 }
 async function metadata(path) {
   const r = await fetch(local + '/meta/v1/' + path, { signal: AbortSignal.timeout(110000) });
@@ -40,6 +42,20 @@ async function api(url, options = {}) {
   assert.equal(r.status, 200, r.body.toString().slice(0, 300)); return JSON.parse(r.body);
 }
 try {
+  await check('BMCL Windows Java runtime index without Prism compatibility recipes', async () => {
+    const index = await metadata('net.minecraft.java/index.json');
+    for (const major of [8, 17, 21, 25]) assert(index.versions.some(v => v.version === 'java' + major));
+    return { versions: index.versions.map(v => v.version) };
+  });
+  await check('BMCL Windows Java 21 manifest preserves upstream integrity hash', async () => {
+    const component = await metadata('net.minecraft.java/java21.json');
+    java21 = component.runtimes.find(v => v.name === 'java-runtime-delta' && v.runtimeOS === 'windows-x64'); assert(java21);
+    const response = await fetch(java21.url, { signal: AbortSignal.timeout(60000) }); assert.equal(response.status, 200);
+    const bytes = Buffer.from(await response.arrayBuffer());
+    assert.equal(createHash('sha1').update(bytes).digest('hex'), java21.checksum.hash);
+    const manifest = JSON.parse(bytes); assert(manifest.files['bin/java.exe']);
+    return { bytes: bytes.length, sha1: java21.checksum.hash, files: Object.keys(manifest.files).length };
+  });
   await check('Prism component index', async () => {
     const v = await metadata('index.json'); assert(v.packages.some(p => p.uid === 'net.minecraft')); return { packages: v.packages.length };
   });
