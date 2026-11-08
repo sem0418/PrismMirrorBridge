@@ -2,6 +2,7 @@ name: CI
 on:
   push:
     branches: [main]
+    paths-ignore: ['**/*.md', 'test-results/**']
   pull_request:
   workflow_dispatch:
 permissions:
@@ -27,7 +28,7 @@ jobs:
           node-version: 24.22.2
       - name: Offline conversion and transport tests
         run: npm test
-      - name: CLI lifecycle and Windows setup/undo
+      - name: CLI lifecycle without trust-store changes
         run: node scripts/smoke-test.mjs
       - name: Strict X.509 conformance
         if: runner.os == 'Linux'
