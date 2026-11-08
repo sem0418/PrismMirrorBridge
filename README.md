@@ -11,6 +11,7 @@
 1. 把整个目录解压到可写位置。便携包已附带 **Node.js 24.22.2 Windows x64**，不需要安装 npm 依赖。
 2. 关闭 Prism，运行 `01-setup.cmd`，选择 **Prism 数据目录里的 `prismlauncher.cfg`**。普通安装通常在 `%APPDATA%\PrismLauncher`；便携版请用 Prism 菜单里的“启动器根目录”定位。
 3. 接入脚本会保存原有网络设置，并将本次安装生成的本地 CA 加入**当前 Windows 用户**的信任库。这是兼容 Prism 固定 HTTPS 模组地址所需的步骤。
+   Windows 可能显示证书安全确认窗口；请核对证书属于本次安装生成的 `Prism Mirror Bridge` CA 后再确认。无人值守 CI 无法代替这一步交互验收。
 4. 运行 `02-start.cmd`，保持窗口打开，然后启动 Prism。
 5. 浏览器打开 <http://127.0.0.1:17643/> 可查看配置地址，<http://127.0.0.1:17643/health> 可查看请求计数。
 

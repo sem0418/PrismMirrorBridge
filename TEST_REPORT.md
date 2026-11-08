@@ -6,9 +6,23 @@
 
 这证明了所列样本的转换及传输可行性，不能等同于全部版本、平台和模组组合均无误。Windows 信任/撤销脚本、真实账号登录、完整游戏安装及进入游戏尚未实机验收。
 
+## GitHub 发布前补充验证
+
+[CI 运行记录](https://github.com/sem0418/PrismMirrorBridge/actions/runs/42458302204)，对应代码提交 `e97bb869215d2a83c5157fa3ceb1290021771898`。使用 Node.js 24.22.2。
+
+| 托管环境 | 43 项离线测试 | CLI 初始化、配置恢复、服务、doctor | 严格 X.509 |
+| --- | --- | --- | --- |
+| Windows | 通过 | 通过 | 不在该平台运行 |
+| Linux | 通过 | 通过 | 通过 |
+| macOS | 通过 | 通过 | 不在该平台运行 |
+
+Windows 首轮在证书导入步骤挂起，未完成接入/撤销的证书信任验收；初始结果保留在 `test-results/github-ci-initial.json`。根证书首次导入可能需要 Windows 安全确认，托管 CI 不具备这项桌面交互条件。最终 CI 明确只验证无信任库改动的 CLI 生命周期，默认不导入证书；可在自己的 Windows 桌面运行 `node scripts/smoke-test.mjs --windows-trust` 额外验证。没有通过关闭 TLS 校验或跳过系统提示来伪造信任测试成功。
+
+最终结构化结果见 `test-results/github-ci-report.json`。发布准备另核对远程每个文件的 Git blob SHA、提交邮箱、私密文件和默认配置。Windows/Linux/macOS 的核心检查通过，仍不代表 Windows 普通桌面接入、Microsoft 登录和进入游戏已完成验收。
+
 ## 运行环境与依据
 
-- Node.js 24.22.1、Linux x86_64；Windows 包附带官方 Node.js 24.22.2 x64，已核对分发包和 node.exe 的 SHA256。Windows 运行时未成功执行，不能计为 Windows 验收。
+- Node.js 24.22.1、Linux x86_64；Windows 包附带官方 Node.js 24.22.2 x64，已核对分发包和 node.exe 的 SHA256。最初本地 Windows 仿真未成功执行；本轮 Windows 托管 CI 已实际运行 Node.js 24.22.2，但仍不能代替普通 Windows 桌面和 Prism 的交互验收。
 - 原始解析器来自 Prism 提交 `899d2f3957215a09fe398a8a8cbb8a8a9c619968`。交付的构建脚本实际重建成功；Prism 的解析源文件未修改，测试桩仅提供诊断显示名称。
 - GUI 使用官方 Prism 11.1.1 Linux AppImage 中未修改的启动器二进制及其 Qt 6.10.2。AppImage SHA256：`bb81038c56a09e944659e4b808dbfbc52d52d5e3a3ffe32216689a3ca1508d3d`。
 - Linux GUI 在隔离数据目录/Xvfb 中运行。测试辅助库通过 Qt 公共接口只添加本次安装 CA，保留正常证书链和主机名校验；未关闭 SSL 验证。此步骤只用于测试，不能替代 Windows certutil 实测。
